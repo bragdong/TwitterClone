@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+</head>
+<body>
+
+{% for id in timeline %}
+<div>
+    <ul>
+        <li>{{id}}</li>
+    </ul>
+</div>
+{% endfor %} 
+
+<script src="/static/twitter.js"></script>
+</body>
+</html>
