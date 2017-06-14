@@ -5,41 +5,77 @@
 </head>
 <body>
   <h1>
-    Sign Up3
+    Sign Up1
   </h1>
-  <form method="post" action="/test">
+  <div>
 
     <div class="container">
       <label><b>Username</b></label>
-      <input type="text" placeholder="Enter Username" name="username" required>
+      <input type="text"  id="username" >
     </div>
 
     <div class="container">
       <label><b>Handle</b></label>
-      <input type="text" placeholder="Enter Handle" name="handle" required>
+      <input type="text" value="@"  id="handle" >
     </div>
 
     <div class="container">
       <label><b>Displayname</b></label>
-      <input type="text" placeholder="Enter Display Name" name="displayName" required>
+      <input type="text"  id="displayName" >
     </div>
 
     <div class="container">
       <label><b>Password</b></label>
-      <input type="password" placeholder="Enter Password" name="psw1" required>
+      <input type="password"  id="psw1" >
     </div>
 
     <div class="container">
       <label><b>Password (repeat)</b></label>
-      <input type="password" placeholder="Re-enter Password" name="psw2" required>
+      <input type="password"  id="psw2" >
     </div>
 
-    </div>
-      <input type="submit">Sign Up</input>
+    <div>
+      <button id="submit_button"> Submit </button>
       <!-- <input type="checkbox" checked="checked"> Remember me -->
     </div>
+    <div id="msg">
 
-  </form>
+    </div>
+    
+  </div>
 
+<script>
+// AJAX posting x-www-form-urlencoded 
+var button = document.getElementById('submit_button');
+var username = document.getElementById('username').value;
+var handle = document.getElementById('handle').value;
+var displayname = document.getElementById('displayName').value;
+var password1 = document.getElementById('psw1').value;
+var password2 = document.getElementById('psw2').value;
+var p = document.createElement('p');
+var div = document.getElementById('msg');
+button.onclick = function () {
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/test');
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onload = function() {
+    	if (password1!=password2){
+    		div.appendChild(p);
+    		p.innerHTML = "Passwords do not match.";
+		}
+         else if (xhr.status === 200) {
+            var result = document.getElementById('result');
+            result.innerHTML = xhr.responseText;  
+        } else if (xhr.status !== 200) {
+            alert('Request failed.  Returned status of ' + xhr.status);
+        }
+    };
+    var body = 'username=' + encodeURIComponent(username) + '&handle=' + encodeURIComponent(handle)
+    +'&displayname=' + encodeURIComponent(displayname) + '&password1=' + encodeURIComponent(password1)
+    +'&password2=' + encodeURIComponent(password2);
+    console.log(body);
+    xhr.send(body);
+};
+</script>
 </body>
 </html>

@@ -37,7 +37,16 @@ public class TwitterPage {
             String psw1 = req.queryParams("psw1");
             String psw2 = req.queryParams("psw2");
             User user = new User();
-            user.insertUser(username, handle, display_name, psw1, psw2);
+            int returnCde = 0;
+            returnCde=user.insertUser(username, handle, display_name, psw1, psw2);
+            if(returnCde == -1){
+            	System.out.println("Passwords entered are not the same.");
+            	System.out.println("show register page again");
+            } else{
+                System.out.println("back in main page");
+                System.out.println("navigate to user home page");
+            }
+
 //            String second = req.queryParams("second");
 //            try {
 //                int a = Integer.parseInt(first);

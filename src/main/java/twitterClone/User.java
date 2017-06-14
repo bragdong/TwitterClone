@@ -16,7 +16,7 @@ public class User {
 
 	private static Connection insertConnect() {
 		// SQLite connection string
-		String url = "jdbc:sqlite:/TwitterClone.db";
+		String url = "jdbc:sqlite:TwitterClone.db";
 		Connection conn = null;
 		try {
 			conn = DriverManager.getConnection(url);
@@ -27,10 +27,11 @@ public class User {
 	}
 
 	
-	public  void insertUser(String username,String handle,String display_name,String password1,String password2){
+	public  int insertUser(String username,String handle,String display_name,String password1,String password2){
 		String sql = "INSERT INTO User(user_name,handle,display_name,password) VALUES (?,?,?,?)";
 		if (!password1.equals(password2)){
-			System.out.println("Passwords entered are not the same.");
+//			System.out.println("Passwords entered are not the same.");
+			return -1;
 		} else{
 					
 	        try (Connection conn = insertConnect();
@@ -42,7 +43,8 @@ public class User {
 	            pstmt.executeUpdate();
 	        } catch (SQLException e) {
 	            System.out.println(e.getMessage());
-	        }	
+	        }
+	        return 0;
 		}
 	}
 }
