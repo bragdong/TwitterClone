@@ -72,8 +72,8 @@ button.onclick = function () {
     		p.innerHTML = "Passwords do not match.";
 		}
          else if (xhr.status === 200) {
-            var result = document.getElementById('result');
-            result.innerHTML = xhr.responseText;  
+            div.appendChild(p);
+    		p.innerHTML = "Account successfully created!";
         } else if (xhr.status !== 200) {
             alert('Request failed.  Returned status of ' + xhr.status);
         }
