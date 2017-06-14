@@ -21,6 +21,35 @@ public class TwitterPage {
 		port(3000);
 		TimeLine timeline = new TimeLine();
 
+		get("/register", (req, res) -> {
+			JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/Register.html");
+			JtwigModel model = JtwigModel.newModel();
+//			JtwigModel model = JtwigModel.newModel().with("timeline", a);
+			// Timeline.getTimeline(user_id);
+			return template.render(model);
+		});
+
+        post("/test", (req, res) -> {
+//            System.out.print("/test ");
+            String username = req.queryParams("username");
+            String handle = req.queryParams("handle");
+            String display_name = req.queryParams("displayName");
+            String psw1 = req.queryParams("psw1");
+            String psw2 = req.queryParams("psw2");
+            User user = new User();
+            user.insertUser(username, handle, display_name, psw1, psw2);
+//            String second = req.queryParams("second");
+//            try {
+//                int a = Integer.parseInt(first);
+////                int b = Integer.parseInt(second);
+//                return new Integer(a + b).toString();
+//            } catch (NumberFormatException ex) {
+//                System.out.println("bad input");
+//            }
+//            return "failure";
+            return "in test";
+        });
+		
 		get("/timeLine", (req, res) -> {
 			String sql = "SELECT tweet_id,user_id,tweet_msg,date_time FROM Tweets ORDER BY date_time desc";
 			ArrayList a = timeline.selectTimeline(sql);
