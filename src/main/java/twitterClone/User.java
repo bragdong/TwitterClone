@@ -27,11 +27,10 @@ public class User {
 	}
 
 	
-	public  int insertUser(String username,String handle,String display_name,String password1,String password2){
+	public void insertUser(String username,String handle,String display_name,String password1,String password2){
 		String sql = "INSERT INTO User(user_name,handle,display_name,password) VALUES (?,?,?,?)";
 		if (!password1.equals(password2)){
 //			System.out.println("Passwords entered are not the same.");
-			return -1;
 		} else{
 					
 	        try (Connection conn = insertConnect();
@@ -44,7 +43,6 @@ public class User {
 	        } catch (SQLException e) {
 	            System.out.println(e.getMessage());
 	        }
-	        return 0;
 		}
 	}
 }

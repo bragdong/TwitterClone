@@ -47,19 +47,27 @@
 <script>
 // AJAX posting x-www-form-urlencoded 
 var button = document.getElementById('submit_button');
-var username = document.getElementById('username').value;
-var handle = document.getElementById('handle').value;
-var displayname = document.getElementById('displayName').value;
-var password1 = document.getElementById('psw1').value;
-var password2 = document.getElementById('psw2').value;
+var usernameID = document.getElementById('username');
+var handleID = document.getElementById('handle');
+var displaynameID = document.getElementById('displayName');
+var password1ID = document.getElementById('psw1');
+var password2ID = document.getElementById('psw2');
+
 var p = document.createElement('p');
 var div = document.getElementById('msg');
+
 button.onclick = function () {
+	var username = usernameID.value;
+	var handle = handleID.value;
+	var displayname = displaynameID.value;
+	var password1 = password1ID.value;
+	var password2 = password2ID.value;
+	
     var xhr = new XMLHttpRequest();
     xhr.open('POST', '/test');
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.onload = function() {
-    	if (password1!=password2){
+    	if (password1 !== password2){
     		div.appendChild(p);
     		p.innerHTML = "Passwords do not match.";
 		}
