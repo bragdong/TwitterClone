@@ -5,7 +5,7 @@
 </head>
 <body>
   <h1>
-    Sign Up1
+    Login
   </h1>
   <div>
 
@@ -15,23 +15,8 @@
     </div>
 
     <div class="container">
-      <label><b>Handle</b></label>
-      <input type="text" value="@"  id="handle" >
-    </div>
-
-    <div class="container">
-      <label><b>Displayname</b></label>
-      <input type="text"  id="displayName" >
-    </div>
-
-    <div class="container">
       <label><b>Password</b></label>
       <input type="password"  id="psw1" >
-    </div>
-
-    <div class="container">
-      <label><b>Password (repeat)</b></label>
-      <input type="password"  id="psw2" >
     </div>
 
     <div>
@@ -41,47 +26,37 @@
     <div id="msg">
 
     </div>
-    
+
   </div>
 
 <script>
-// AJAX posting x-www-form-urlencoded 
+// AJAX posting x-www-form-urlencoded
 var button = document.getElementById('submit_button');
 var usernameID = document.getElementById('username');
-var handleID = document.getElementById('handle');
-var displaynameID = document.getElementById('displayName');
 var password1ID = document.getElementById('psw1');
-var password2ID = document.getElementById('psw2');
 
 var p = document.createElement('p');
 var div = document.getElementById('msg');
 
 button.onclick = function () {
 	var username = usernameID.value;
-	var handle = handleID.value;
-	var displayname = displaynameID.value;
 	var password1 = password1ID.value;
-	var password2 = password2ID.value;
-	
+
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', '/test');
+    xhr.open('POST', '/test2');
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.onload = function() {
-    	if (password1 !== password2){
-    		div.appendChild(p);
-    		p.innerHTML = "Passwords do not match.";
-		}
-         else if (xhr.status === 200) {
+    	if (xhr.status === 200) {
             var result = document.getElementById('result');
-            result.innerHTML = xhr.responseText;  
+            result.innerHTML = xhr.responseText;
         } else if (xhr.status !== 200) {
             alert('Request failed.  Returned status of ' + xhr.status);
         }
     };
-    var body = 'username=' + encodeURIComponent(username) + '&handle=' + encodeURIComponent(handle)
-    +'&displayname=' + encodeURIComponent(displayname) + '&password1=' + encodeURIComponent(password1)
-    +'&password2=' + encodeURIComponent(password2);
+    var body = 'username=' + encodeURIComponent(username) + '&password1=' + encodeURIComponent(password1);
     console.log(body);
+        	div.appendChild(p);
+    		p.innerHTML = "Username or Password not valid.";
     xhr.send(body);
 };
 </script>
