@@ -39,7 +39,7 @@ public class TwitterPage {
 		});
 
         post("/test2", (req, res) -> {
-//          System.out.print("entering test2");
+          System.out.println("entering user homepage");
           String username = req.queryParams("username");
           String psw1 = req.queryParams("password1");
           User user = new User();
