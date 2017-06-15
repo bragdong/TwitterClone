@@ -107,23 +107,28 @@ public class User {
 	
 	public String checkLogin(String username, String password) {
 		String sqlUsername = "SELECT count(*) FROM User where user_name = \"" + username + "\"";
-		String sqlUsernamePassword = "SELECT count(*) FROM User where user_name = \"" + username + "\"" + "AND password = \"" +  password + "\"";
+		String sqlUsernamePassword = "SELECT count(*) FROM User where user_name = \"" + username + "\" AND password = \"" +  password + "\"";
 		String returnMessage = "";
 		
         try (Connection conn = insertConnect();
                 Statement stmt  = conn.createStatement();
                 ResultSet rs    = stmt.executeQuery(sqlUsername);
-        		ResultSet rs1   = stmt.executeQuery(sqlUsernamePassword)) {
+        		Statement stmt1  = conn.createStatement();
+        		ResultSet rs1   = stmt1.executeQuery(sqlUsernamePassword)) {
         	System.out.println(rs);
         	System.out.println(rs1);
+        	
+        	int getUserCount = rs.getInt("count(*)");
+        	int getUserPasswordCount = rs1.getInt("count(*)");
             
-        	if (rs.getInt("count(*)") == 0) { //if username doesn't exist in database
+        	if (getUserCount == 0) { //if username doesn't exist in database
             	System.out.println(rs.getInt("count(*)"));
         		returnMessage = "The username you entered doesn't exist.";
 //            	return returnMessage;
-            } else if (rs1.getInt("count(*)") == 0) { //if username + password combo doesn't exist in database
+            } else if (getUserPasswordCount == 0) { //if username + password combo doesn't exist in database
             	System.out.println(rs1.getInt("count(*)"));
-        		returnMessage = "The password you've entered is incorrect."; }
+        		returnMessage = "The password you entered is incorrect."; 
+        		}
 //            	return returnMessage; }
              else {
             	returnMessage = "";
