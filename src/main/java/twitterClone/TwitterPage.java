@@ -39,14 +39,15 @@ public class TwitterPage {
 		});
 
         post("/test2", (req, res) -> {
-//          System.out.print("entering test2");
+          System.out.println("entering user homepage");
           String username = req.queryParams("username");
           String psw1 = req.queryParams("password1");
-//          User user = new User();
+          JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/tweet.html");
+          JtwigModel model = JtwigModel.newModel();
           System.out.println("Username entered = "+username);
           System.out.println("Password entered = "+psw1);
           System.out.println("Call checkUser and navigate to user Home Page if valid.");
-          return "exiting test2";
+          return template.render(model);
       });
 		
         post("/test", (req, res) -> {
