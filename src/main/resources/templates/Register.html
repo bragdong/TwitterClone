@@ -69,11 +69,13 @@ button.onclick = function () {
     xhr.onload = function() {
     	if (password1 !== password2){
     		div.appendChild(p);
-    		p.innerHTML = "Passwords do not match.";
+    		p.innerHTML = xhr.responseText;
 		}
          else if (xhr.status === 200) {
             div.appendChild(p);
-    		p.innerHTML = "Account successfully created!";
+    		p.innerHTML =  xhr.responseText;
+    		if(xhr.responseText === "") {
+    			window.location.assign("/timeLine"); }
         } else if (xhr.status !== 200) {
             alert('Request failed.  Returned status of ' + xhr.status);
         }

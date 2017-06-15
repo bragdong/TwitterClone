@@ -41,11 +41,12 @@ public class TwitterPage {
 //          System.out.print("entering test2");
           String username = req.queryParams("username");
           String psw1 = req.queryParams("password1");
-//          User user = new User();
-          System.out.println("Username entered = "+username);
-          System.out.println("Password entered = "+psw1);
-          System.out.println("Call checkUser and navigate to user Home Page if valid.");
-          return "exiting test2";
+          User user = new User();
+          String returnMessage = user.checkLogin(username, psw1);
+//          System.out.println("Username entered = "+username);
+//          System.out.println("Password entered = "+psw1);
+//          System.out.println("Call checkUser and navigate to user Home Page if valid.");
+          return returnMessage;
       });
 		
         post("/test", (req, res) -> {
@@ -58,7 +59,7 @@ public class TwitterPage {
             User user = new User();
 //            int returnCde = 0;
 //            returnCde=user.insertUser(username, handle, display_name, psw1, psw2);
-            user.insertUser(username, handle, display_name, psw1, psw2);
+            String returnMessage = user.insertUser(username, handle, display_name, psw1, psw2);
 //            if(returnCde == -1){
 //            	System.out.println("Passwords entered are not the same.");
 //            	System.out.println("show register page again");
@@ -76,7 +77,7 @@ public class TwitterPage {
 //                System.out.println("bad input");
 //            }
 //            return "failure";
-            return "in test";
+            return returnMessage;
         });
 		
 		get("/timeLine", (req, res) -> {
