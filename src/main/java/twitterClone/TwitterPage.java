@@ -30,6 +30,7 @@ public class TwitterPage {
 		});
 
 		get("/login", (req, res) -> {
+			System.out.println("this is your Session ID: "+req.session().id());
 			JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/Login.html");
 			JtwigModel model = JtwigModel.newModel();
 //			JtwigModel model = JtwigModel.newModel().with("timeline", a);
