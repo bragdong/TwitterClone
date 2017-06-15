@@ -24,63 +24,80 @@ public class TwitterPage {
 		get("/register", (req, res) -> {
 			JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/Register.html");
 			JtwigModel model = JtwigModel.newModel();
-//			JtwigModel model = JtwigModel.newModel().with("timeline", a);
+			// JtwigModel model = JtwigModel.newModel().with("timeline", a);
 			// Timeline.getTimeline(user_id);
 			return template.render(model);
 		});
 
 		get("/login", (req, res) -> {
-			System.out.println("this is your Session ID: "+req.session().id());
+			System.out.println("this is your Session ID: " + req.session().id());
 			JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/Login.html");
 			JtwigModel model = JtwigModel.newModel();
-//			JtwigModel model = JtwigModel.newModel().with("timeline", a);
+			// JtwigModel model = JtwigModel.newModel().with("timeline", a);
 			// Timeline.getTimeline(user_id);
 			return template.render(model);
 		});
 
-        post("/test2", (req, res) -> {
-          System.out.println("entering user homepage");
-          String username = req.queryParams("username");
-          String psw1 = req.queryParams("password1");
-          User user = new User();
-          String returnMessage = user.checkLogin(username, psw1);
-//          System.out.println("Username entered = "+username);
-//          System.out.println("Password entered = "+psw1);
-//          System.out.println("Call checkUser and navigate to user Home Page if valid.");
-          return returnMessage;
-      });
-		
-        post("/test", (req, res) -> {
-//            System.out.print("/test ");
-            String username = req.queryParams("username");
-            String handle = req.queryParams("handle");
-            String display_name = req.queryParams("displayname");
-            String psw1 = req.queryParams("password1");
-            String psw2 = req.queryParams("password2");
-            User user = new User();
-//            int returnCde = 0;
-//            returnCde=user.insertUser(username, handle, display_name, psw1, psw2);
-            String returnMessage = user.insertUser(username, handle, display_name, psw1, psw2);
-//            if(returnCde == -1){
-//            	System.out.println("Passwords entered are not the same.");
-//            	System.out.println("show register page again");
-//            } else{
-//                System.out.println("back in main page");
-//                System.out.println("navigate to user home page");
-//            }
+		post("/test2", (req, res) -> {							//login check
+			System.out.println("entering user homepage");
+			String username = req.queryParams("username");
+			String psw1 = req.queryParams("password1");
+			User user = new User();
+			String returnMessage = user.checkLogin(username, psw1);
+//			req.session().attribute("username", username);
+//			req.session.getAttribute("username");
+			// System.out.println("Username entered = "+username);
+			// System.out.println("Password entered = "+psw1);
+			// System.out.println("Call checkUser and navigate to user Home Page
+			// if valid.");
+			return returnMessage;
+		});
 
-//            String second = req.queryParams("second");
-//            try {
-//                int a = Integer.parseInt(first);
-////                int b = Integer.parseInt(second);
-//                return new Integer(a + b).toString();
-//            } catch (NumberFormatException ex) {
-//                System.out.println("bad input");
-//            }
-//            return "failure";
-            return returnMessage;
-        });
-		
+		post("/test", (req, res) -> { 								//register
+			// System.out.print("/test ");
+			String username = req.queryParams("username");
+			String handle = req.queryParams("handle");
+			String display_name = req.queryParams("displayname");
+			String psw1 = req.queryParams("password1");
+			String psw2 = req.queryParams("password2");
+			User user = new User();
+			// int returnCde = 0;
+			// returnCde=user.insertUser(username, handle, display_name, psw1,
+			// psw2);
+			String returnMessage = user.insertUser(username, handle, display_name, psw1, psw2);
+			// if(returnCde == -1){
+			// System.out.println("Passwords entered are not the same.");
+			// System.out.println("show register page again");
+			// } else{
+			// System.out.println("back in main page");
+			// System.out.println("navigate to user home page");
+			// }
+
+			// String second = req.queryParams("second");
+			// try {
+			// int a = Integer.parseInt(first);
+			//// int b = Integer.parseInt(second);
+			// return new Integer(a + b).toString();
+			// } catch (NumberFormatException ex) {
+			// System.out.println("bad input");
+			// }
+			// return "failure";
+			return returnMessage;
+		});
+
+		get("/tweet", (req, res) -> {
+			JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/tweet.html");
+			JtwigModel model = JtwigModel.newModel();
+			return template.render(model);
+		});
+
+		post("/tweet1", (req, res) -> {
+			String tweetMsg = req.queryParams("tweet");
+			Tweet tweet = new Tweet();
+			tweet.insertTweet(1, tweetMsg);
+			return tweetMsg;
+		});
+
 		get("/timeLine", (req, res) -> {
 			String sql = "SELECT tweet_id,user_id,tweet_msg,date_time FROM Tweets ORDER BY date_time desc";
 			ArrayList a = timeline.selectTimeline(sql);
@@ -98,7 +115,7 @@ public class TwitterPage {
 			// Timeline.getTimeline(user_id);
 			return template.render(model);
 		});
-		
+
 		// get("/timeline", (req, res) -> {
 		// JtwigTemplate template =
 		// JtwigTemplate.classpathTemplate("TwitterClone.jtwig");

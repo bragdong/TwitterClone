@@ -10,45 +10,44 @@
 <div>
 
     <div class="container">
-      <label><b>Message</b></label>
-      <input type="text"  id="message" size="140" >
+      <label><b>Message</b></label><br>
+      <textarea rows="4" cols="50" maxlength="140" id="tweet"></textarea>
     </div>
 
     <div>
       <br>
-      <button id="submit_button"> Share </button>
+      <button id="submit_button"> Tweet </button>
     </div>
-
+  
+  <div id="msg"></div>
   </div>
 
 <script>
 // AJAX posting x-www-form-urlencoded
 var button = document.getElementById('submit_button');
-var usernameID = document.getElementById('username');
-var password1ID = document.getElementById('psw1');
+var tweet = document.getElementById('tweet');
 
 var p = document.createElement('p');
 var div = document.getElementById('msg');
 
 button.onclick = function () {
-	var username = usernameID.value;
-	var password1 = password1ID.value;
-
+	tweet = tweet.value;
+	
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', '/test2');
+    xhr.open('POST', '/tweet1');
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.onload = function() {
     	if (xhr.status === 200) {
-            var result = document.getElementById('result');
-            result.innerHTML = xhr.responseText;
+        	div.appendChild(p);
+    		p.innerHTML = "Your tweet has been posted!";
+    		setTimeout(function() {
+    			p.innerHTML = "";}, 2000);
         } else if (xhr.status !== 200) {
             alert('Request failed.  Returned status of ' + xhr.status);
         }
     };
-    var body = 'username=' + encodeURIComponent(username) + '&password1=' + encodeURIComponent(password1);
+    var body = 'tweet=' + encodeURIComponent(tweet);
     console.log(body);
-        	div.appendChild(p);
-    		p.innerHTML = "Username or Password not valid.";
     xhr.send(body);
 };
 </script>

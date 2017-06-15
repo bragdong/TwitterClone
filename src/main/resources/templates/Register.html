@@ -75,7 +75,7 @@ button.onclick = function () {
             div.appendChild(p);
     		p.innerHTML =  xhr.responseText;
     		if(xhr.responseText === "") {
-    			window.location.assign("/timeLine"); }
+    			window.location.assign("/login"); }
         } else if (xhr.status !== 200) {
             alert('Request failed.  Returned status of ' + xhr.status);
         }

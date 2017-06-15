@@ -103,8 +103,6 @@ public class User {
            return "pass";
 	}
 	
-	
-	
 	public String checkLogin(String username, String password) {
 		String sqlUsername = "SELECT count(*) FROM User where user_name = \"" + username + "\"";
 		String sqlUsernamePassword = "SELECT count(*) FROM User where user_name = \"" + username + "\" AND password = \"" +  password + "\"";
