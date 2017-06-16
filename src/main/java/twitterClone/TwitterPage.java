@@ -46,6 +46,8 @@ public class TwitterPage {
 //			System.out.println("Is session new? "+ req.session().isNew());  //why is it false?
 			String username = req.queryParams("username");
 			String psw1 = req.queryParams("password1");
+//			String handle = req.queryParams("handle");
+//			String displayName = req.queryParams(displayName);
 			User user = new User();
 			String returnMessage = user.checkLogin(username, psw1);
 			if (returnMessage == ""){
@@ -54,6 +56,8 @@ public class TwitterPage {
 				req.session().attribute("user_id",user_id);
 				req.session().attribute("username", username);
 				req.session().attribute("loggedin", "loggedin");
+//				req.session().attribute("handle", handle);
+//				req.session().attribute("displayName", "loggedin");
 //				String s = req.session().attribute("username");
 //				boolean l = req.session().attribute("loggedin");
 				System.out.println("User logged in = " + req.session().attribute("username"));
@@ -139,6 +143,12 @@ public class TwitterPage {
 		});
 
 		get("/timeLine", (req, res) -> {
+			User user = new User();
+//			req.session().attribute("username");
+			req.session().attribute("user_id");
+			int user_id = req.session().attribute("user_id");
+			System.out.println(user_id);
+//			int user_id = user.selectUserID(username);
 			String loggedin = req.session().attribute("loggedin");
 			if(loggedin == null){
 				System.out.println("not logged in");
@@ -146,7 +156,7 @@ public class TwitterPage {
 				res.redirect(redirectUrl);	
 			} else {
 				util_services.routeDisplays(debug,"in","timeLine");
-				String sql = "SELECT tweet_id,user_id,tweet_msg,date_time FROM Tweets ORDER BY date_time desc";
+				String sql = "select Tweets.user_id, User.display_name, User.handle, tweet_msg, date_time FROM Tweets inner join Follow on Tweets.user_id = Follow.target inner join User on Follow.target = User.user_id where Follow.user_id = " + user_id + " ORDER BY date_time desc;";
 				ArrayList a = timeline.selectTimeline(sql);
 				JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/TwitterClone.jtwig");
 				JtwigModel model = JtwigModel.newModel().with("timeline", a);
@@ -166,8 +176,7 @@ public class TwitterPage {
 			} else {
 				util_services.routeDisplays(debug,"in","user");
 				int user_id=req.session().attribute("user_id");			
-				String sql = "SELECT tweet_id,user_id,tweet_msg,date_time FROM Tweets WHERE user_id=";
-				sql += user_id+" ORDER BY date_time desc";
+				String sql = "select Tweets.user_id, User.display_name, User.handle, tweet_msg, date_time FROM Tweets inner join User on Tweets.user_id = User.user_id  WHERE user.user_id = " + user_id + " ORDER BY date_time desc;";
 				System.out.println("**** SQL for user = "+sql);
 				ArrayList a = timeline.selectTimeline(sql);
 				JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/TwitterClone.jtwig");

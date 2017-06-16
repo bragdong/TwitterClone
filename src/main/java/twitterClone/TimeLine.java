@@ -32,9 +32,11 @@ public class TimeLine {
 			// loop through the result set
 			int i = 0;
 			while (rs.next()) {
-				tweetList.add(i, rs.getString("tweet_msg") + "\t" + rs.getString("date_time"));
-				 System.out.println(rs.getInt("tweet_id") + "\t" +
+				tweetList.add(i, rs.getString("display_name") + rs.getString("handle") + rs.getString("tweet_msg") + rs.getString("date_time"));
+				 System.out.println(
 				 rs.getString("user_id") + "\t" +
+				 rs.getString("display_name") + "\t" +
+				 rs.getString("handle") + "\t" +
 				 rs.getString("tweet_msg") + "\t" +
 				 rs.getString("date_time"));
 				i += 1;
