@@ -86,6 +86,7 @@ public class TwitterPage {
 				req.session().attribute("user_id",user_id);
 				user.addFollow(user_id, user_id);
 			}
+
 			// if(returnCde == -1){
 			// System.out.println("Passwords entered are not the same.");
 			// System.out.println("show register page again");
