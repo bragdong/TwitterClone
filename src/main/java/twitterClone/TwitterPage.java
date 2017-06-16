@@ -137,7 +137,10 @@ public class TwitterPage {
 
 		get("/user", (req, res) -> {
 			util_services.routeDisplays(debug,"in","user");
-			String sql = "SELECT tweet_id,user_id,tweet_msg,date_time FROM Tweets WHERE user_id=2 ORDER BY date_time desc";
+			int user_id=req.session().attribute("user_id");			
+			String sql = "SELECT tweet_id,user_id,tweet_msg,date_time FROM Tweets WHERE user_id=";
+			sql += user_id+" ORDER BY date_time desc";
+			System.out.println("**** SQL for user = "+sql);
 			ArrayList a = timeline.selectTimeline(sql);
 			JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/TwitterClone.jtwig");
 			JtwigModel model = JtwigModel.newModel().with("timeline", a);
