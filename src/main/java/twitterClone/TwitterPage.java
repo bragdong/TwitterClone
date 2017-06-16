@@ -81,6 +81,9 @@ public class TwitterPage {
 			// returnCde=user.insertUser(username, handle, display_name, psw1,
 			// psw2);
 			String returnMessage = user.insertUser(username, handle, display_name, psw1, psw2);
+			if(returnMessage = "") {
+				user.insert(username);
+			}
 			// if(returnCde == -1){
 			// System.out.println("Passwords entered are not the same.");
 			// System.out.println("show register page again");
