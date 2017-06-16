@@ -53,7 +53,7 @@ public class TwitterPage {
 				int user_id = user.selectUserID(username);
 				req.session().attribute("user_id",user_id);
 				req.session().attribute("username", username);
-				req.session().attribute("loggedin", true);
+				req.session().attribute("loggedin", "loggedin");
 //				String s = req.session().attribute("username");
 //				boolean l = req.session().attribute("loggedin");
 				System.out.println("User logged in = " + req.session().attribute("username"));
@@ -106,11 +106,19 @@ public class TwitterPage {
 		});
 
 		get("/tweet", (req, res) -> {
-			util_services.routeDisplays(debug,"in","tweet");
-			JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/tweet.html");
-			JtwigModel model = JtwigModel.newModel();
-			util_services.routeDisplays(debug,"out","tweet");
-			return template.render(model);
+			String loggedin = req.session().attribute("loggedin");
+			if(loggedin == null){
+				System.out.println("not logged in");
+				String redirectUrl = "/login";
+				res.redirect(redirectUrl);	
+			} else{
+				util_services.routeDisplays(debug,"in","tweet");
+				JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/tweet.html");
+				JtwigModel model = JtwigModel.newModel();
+				util_services.routeDisplays(debug,"out","tweet");
+				return template.render(model);
+			}
+			return "";
 		});
 
 		post("/tweet1", (req, res) -> {
@@ -128,85 +136,46 @@ public class TwitterPage {
 		});
 
 		get("/timeLine", (req, res) -> {
-			util_services.routeDisplays(debug,"in","timeLine");
-			String sql = "SELECT tweet_id,user_id,tweet_msg,date_time FROM Tweets ORDER BY date_time desc";
-			ArrayList a = timeline.selectTimeline(sql);
-			JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/TwitterClone.jtwig");
-			JtwigModel model = JtwigModel.newModel().with("timeline", a);
-			// Timeline.getTimeline(user_id);
-			util_services.routeDisplays(debug,"out","timeLine");
-			return template.render(model);
+			String loggedin = req.session().attribute("loggedin");
+			if(loggedin == null){
+				System.out.println("not logged in");
+				String redirectUrl = "/login";
+				res.redirect(redirectUrl);	
+			} else {
+				util_services.routeDisplays(debug,"in","timeLine");
+				String sql = "SELECT tweet_id,user_id,tweet_msg,date_time FROM Tweets ORDER BY date_time desc";
+				ArrayList a = timeline.selectTimeline(sql);
+				JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/TwitterClone.jtwig");
+				JtwigModel model = JtwigModel.newModel().with("timeline", a);
+				// Timeline.getTimeline(user_id);
+				util_services.routeDisplays(debug,"out","timeLine");
+				return template.render(model);
+			}
+			return "";
 		});
 
 		get("/user", (req, res) -> {
-			util_services.routeDisplays(debug,"in","user");
-			int user_id=req.session().attribute("user_id");			
-			String sql = "SELECT tweet_id,user_id,tweet_msg,date_time FROM Tweets WHERE user_id=";
-			sql += user_id+" ORDER BY date_time desc";
-			System.out.println("**** SQL for user = "+sql);
-			ArrayList a = timeline.selectTimeline(sql);
-			JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/TwitterClone.jtwig");
-			JtwigModel model = JtwigModel.newModel().with("timeline", a);
-			// Timeline.getTimeline(user_id);
-			util_services.routeDisplays(debug,"out","user");
-			return template.render(model);
+			String loggedin = req.session().attribute("loggedin");
+			if(loggedin == null){
+				System.out.println("not logged in");
+				String redirectUrl = "/login";
+				res.redirect(redirectUrl);	
+			} else {
+				util_services.routeDisplays(debug,"in","user");
+				int user_id=req.session().attribute("user_id");			
+				String sql = "SELECT tweet_id,user_id,tweet_msg,date_time FROM Tweets WHERE user_id=";
+				sql += user_id+" ORDER BY date_time desc";
+				System.out.println("**** SQL for user = "+sql);
+				ArrayList a = timeline.selectTimeline(sql);
+				JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/TwitterClone.jtwig");
+				JtwigModel model = JtwigModel.newModel().with("timeline", a);
+				// Timeline.getTimeline(user_id);
+				util_services.routeDisplays(debug,"out","user");
+				return template.render(model);	
+			}
+			return "";
 		});
 
-		// get("/timeline", (req, res) -> {
-		// JtwigTemplate template =
-		// JtwigTemplate.classpathTemplate("TwitterClone.jtwig");
-		// JtwigModel model = JtwigModel.newModel().with("albums", a);
-		// return template.render(model);
-		// });
-
-		// Format display using Jtwig
-		// get("/", (req, res) -> {
-		// JtwigTemplate template =
-		// JtwigTemplate.classpathTemplate("example.jtwig");
-		// JtwigModel model = JtwigModel.newModel().with("albums",
-		// albumList.albums);
-		// return template.render(model);
-		// });
-
-		// Format using Json
-		// get("/json", (req, res) -> {
-		// Gson gson = new Gson();
-		// System.out.println("In Json route. Json format = " +
-		// gson.toJson(albumList));
-		// return gson.toJson(albumList.albums);
-		// });
-		//
-		// // Read Jsonformat and create HTML
-		// get("/parsejson", (req, res) -> {
-		// System.out.println("In Parse Json route");
-		// JtwigTemplate template =
-		// JtwigTemplate.classpathTemplate("example.jtwig");
-		// JtwigModel model = JtwigModel.newModel().with("albums", albumList);
-		// return template.render(model);
-		// });
-		//
-		// // get("/album/:id", (req, res) -> {
-		// // System.out.println("request made");
-		// // System.out.println(req.queryParams("b"));
-		// // return "hi world2";
-		// // });
-		//
-		// get("/album/:id", (request, response) -> {
-		// Album album =
-		// albumList.getAlbum(Integer.parseInt(request.params(":id")));
-		// if (album == null) {
-		// return "Album was not found.";
-		// }
-		// return ("Hello: " + album.title + " " + album.artist + " " +
-		// album.genre);
-		// });
-		//
-		// get("/addAlbum/:title/:artist/:genre", (request, response) -> {
-		// int newID = albumList.addAlbum(request.params(":title"),
-		// request.params(":artist"),
-		// request.params(":genre"));
-		// return (newID);
-		// });
 	}
 
 }
