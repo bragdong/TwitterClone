@@ -64,6 +64,18 @@ public class User {
 		}
 	}
 	
+	public void addFollow(int user_id,int target){
+		String sql = "INSERT INTO Follow(user_id,target) VALUES (?,?)";
+        try (Connection conn = insertConnect();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	        	pstmt.setInt(1, user_id);
+	            pstmt.setInt(2, target);
+	            pstmt.executeUpdate();          
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+	}
+	
 	public int selectUserID(String username) {
 		String sql = "SELECT user_id FROM user where user_name = \"" + username + "\"";
         System.out.println("SQL for select userid = "+sql);
