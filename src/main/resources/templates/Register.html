@@ -64,7 +64,7 @@ button.onclick = function () {
 	var password2 = password2ID.value;
 	
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', '/test');
+    xhr.open('POST', '/register_submit');
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.onload = function() {
     	if (password1 !== password2){

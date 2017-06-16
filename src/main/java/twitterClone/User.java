@@ -64,6 +64,25 @@ public class User {
 		}
 	}
 	
+	public int selectUserID(String username) {
+		String sql = "SELECT user_id FROM user where user_name = \"" + username + "\"";
+        System.out.println("SQL for select userid = "+sql);
+        int user_id=0;
+        try (Connection conn = insertConnect();
+             Statement stmt  = conn.createStatement();
+             ResultSet rs    = stmt.executeQuery(sql)) {  
+        	System.out.println("before while");
+        	while(rs.next()){
+        		System.out.println("in while loop");
+                user_id = rs.getInt("user_id");
+                System.out.println(user_id);
+        	}
+ 
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return user_id;
+	}
 	
 	public String checkUser(String username) {
 		String sqlUsername = "SELECT count(*) FROM User where user_name = \"" + username + "\"";
@@ -113,21 +132,15 @@ public class User {
                 ResultSet rs    = stmt.executeQuery(sqlUsername);
         		Statement stmt1  = conn.createStatement();
         		ResultSet rs1   = stmt1.executeQuery(sqlUsernamePassword)) {
-        	System.out.println(rs);
-        	System.out.println(rs1);
         	
         	int getUserCount = rs.getInt("count(*)");
         	int getUserPasswordCount = rs1.getInt("count(*)");
             
         	if (getUserCount == 0) { //if username doesn't exist in database
-            	System.out.println(rs.getInt("count(*)"));
         		returnMessage = "The username you entered doesn't exist.";
-//            	return returnMessage;
             } else if (getUserPasswordCount == 0) { //if username + password combo doesn't exist in database
-            	System.out.println(rs1.getInt("count(*)"));
         		returnMessage = "The password you entered is incorrect."; 
         		}
-//            	return returnMessage; }
              else {
             	returnMessage = "";
             }
