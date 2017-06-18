@@ -97,7 +97,7 @@ public class User {
 	}
 	
 	public String checkUser(String username) {
-		String sqlUsername = "SELECT count(*) FROM User where user_name = \"" + username + "\"";
+		String sqlUsername = "SELECT count(*) FROM User where user_name = \"" + username + "\" COLLATE NOCASE";
         
         try (Connection conn = insertConnect();
              Statement stmt  = conn.createStatement();
@@ -114,7 +114,7 @@ public class User {
 	}
 	
 	public String checkHandle(String handle) {
-		String sqlHandle = "SELECT count(*) FROM User where handle = \"" + handle + "\"";
+		String sqlHandle = "SELECT count(*) FROM User where handle = \"" + handle + "\" COLLATE NOCASE";
 		System.out.println(sqlHandle);
 		
         try (Connection conn = insertConnect();
