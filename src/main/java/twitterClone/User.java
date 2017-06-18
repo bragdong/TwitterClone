@@ -64,7 +64,7 @@ public class User {
 		}
 	}
 	
-	public void addFollow(int user_id,int target){
+	public void addFollow(int user_id,int target){  //MADE A COPY OF THIS IN FOLLOW CLASS. SHOULD THIS BE HERE??
 		String sql = "INSERT INTO Follow(user_id,target) VALUES (?,?)";
         try (Connection conn = insertConnect();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
