@@ -53,7 +53,7 @@ button.onclick = function () {
     		div.appendChild(p);
     		p.innerHTML = xhr.responseText;
     		if (xhr.responseText == "") {
-    			window.location.assign("/tweet"); }
+    			window.location.assign("/tweet/"+username); }
         } else if (xhr.status !== 200) {
             alert('Request failed.  Returned status of ' + xhr.status);
         }
