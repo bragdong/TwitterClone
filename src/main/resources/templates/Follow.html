@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	</head>
+	<body>
+		
+		<h1>
+    		Follow
+  		</h1>
+  		
+  		<div class="container">
+	      <label><b>Search</b></label>
+	      <input type="text"  id="search_id" >
+	    </div>
+  		<div class="container">
+	      <label><b>Follow ID</b></label>
+	      <input type="text"  id="target_id" >
+	    </div>	    
+        <div>
+	      <br>
+	      <button id="follow_button"> Follow </button>
+    	</div>
+    	
+		{% for id in followlist %}
+		<div>
+		    <ul>
+		        <li>{{id}}</li>
+		    </ul>
+		</div>
+		{% endfor %} 
+	
+	<script src="/static/follow.js"></script>
+	</body>
+</html>
