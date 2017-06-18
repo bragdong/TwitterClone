@@ -147,12 +147,6 @@ public class TwitterPage {
 
 		get("/timeLine", (req, res) -> {
 			util_services.routeDisplays(debug,"in","timeLine");
-			User user = new User();
-			String userName = req.session().attribute("username");
-			req.session().attribute("user_id");
-			int user_id = req.session().attribute("user_id");
-			System.out.println(user_id);
-//			int user_id = user.selectUserID(username);
 			String loggedin = req.session().attribute("loggedin");
 			if(loggedin == null){
 				System.out.println("not logged in");
@@ -160,13 +154,19 @@ public class TwitterPage {
 				util_services.routeDisplays(debug,"out","timeLine");
 				res.redirect(redirectUrl);	
 			} else {
+				User user = new User();
+				String userName = req.session().attribute("username");
+				req.session().attribute("user_id");
+				int user_id = req.session().attribute("user_id");
+				System.out.println(user_id);
+//				int user_id = user.selectUserID(username);
 				String sql = "select Tweets.user_id, User.user_name, User.display_name, User.handle, tweet_msg, date_time FROM Tweets inner join Follow on Tweets.user_id = Follow.target inner join User on Follow.target = User.user_id where Follow.user_id = " + user_id + " ORDER BY date_time desc;";
 				System.out.println("**** SQL for user = "+sql);
 				ArrayList a = timeline.selectTimeline(sql);
 				JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/TwitterClone.jtwig");
 				JtwigModel model = JtwigModel.newModel();
 				model.with("timeline", a); //displays bulleted list of tweets of those the user follows
-				model.with("title", userName); //displays at top of page
+				model.with("title", "Your Timeline"); //displays at top of page
 				util_services.routeDisplays(debug,"out","timeLine");
 				return template.render(model);
 			}
