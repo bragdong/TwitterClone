@@ -29,6 +29,9 @@ public class TimeLine {
 				Statement stmt = conn.createStatement();
 				ResultSet rs = stmt.executeQuery(sql)) {
 
+			if(!rs.next()) {
+				tweetList.add("There aren't any tweets to display.  Click the \"Tweet\" link above to create a new tweet, or click the \"Follow\" link to choose other users to follow!");
+			}
 			// loop through the result set
 			int i = 0;
 			while (rs.next()) {
