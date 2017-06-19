@@ -13,6 +13,7 @@
 	      <label><b>Search</b></label>
 	      <input type="text"  id="search_id" >
 	    </div>
+	    
   		<div class="container">
 	      <label><b>Follow ID</b></label>
 	      <input type="text"  id="target_id" >
@@ -23,7 +24,7 @@
     	</div>
     	
 		{% for id in followlist %}
-		<div>
+		<div id="follow_buttons">
 		    <ul>
 		        <li>{{id}}</li>
 		    </ul>
