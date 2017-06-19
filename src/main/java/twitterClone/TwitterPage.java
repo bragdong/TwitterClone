@@ -210,7 +210,7 @@ public class TwitterPage {
 				res.redirect(redirectUrl);	
 			} else {			
 				int user_id=req.session().attribute("user_id");	
-				String sql = "select handle,display_name,User.user_id from User where User.user_id not in (select target from Follow where Follow.user_id="+user_id+");";
+				String sql = "select handle,display_name,User.user_name,User.user_id from User where User.user_id not in (select target from Follow where Follow.user_id="+user_id+");";
 				//String sql = "select Tweets.user_id, User.display_name, User.handle, tweet_msg, date_time FROM Tweets inner join User on Tweets.user_id = User.user_id  WHERE user.user_id = " + user_id + " ORDER BY date_time desc;";
 				System.out.println("**** SQL for Follow = "+sql);
 				ArrayList a = follow.selectTimeline(sql);

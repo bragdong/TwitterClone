@@ -33,9 +33,13 @@ public class Follow {
 			// loop through the result set
 			int i = 0;
 			while (rs.next()) {
-				followlist.add(i, rs.getString("display_name") + rs.getString("handle")+ rs.getString("user_id"));
-				 System.out.println(
+//				                                                                                                                        <button type="button">Click Me!</button>
+				followlist.add(i, rs.getString("display_name") + rs.getString("handle") + "&nbsp" + rs.getString("user_id") + "&nbsp" + "<button type=\"button\"> Follow</button");
+//				followlist.add(i, "<a href=\"/user/" + rs.getString("user_name") + "\">" + rs.getString("display_name") + "</a>" + "&nbsp" + "<a href=\"/user/" + rs.getString("user_name") + "\">" + rs.getString("handle") + "</a>" + "&nbsp" +  rs.getString("user_id"));
+//				tweetList.add(i, "<a href=\"/user/" + rs.getString("user_name") + "\">" + rs.getString("display_name") + "</a>" + "&nbsp" + "<a href=\"/user/" + rs.getString("user_name") + "\">" + rs.getString("handle") + "</a>" + "&nbsp" + rs.getString("date_time") + "<br>" + rs.getString("tweet_msg") );
+				System.out.println(
 				 rs.getString("handle") + "\t" +
+				 rs.getString("user_name") + "\t" +
 				 rs.getString("user_id") + "\t" +
 				 rs.getString("display_name"));
 				i += 1;
