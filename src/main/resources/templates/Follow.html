@@ -11,25 +11,18 @@
   		
   		<div class="container">
 	      <label><b>Search</b></label>
-	      <input type="text"  id="search_id" >
-	    </div>
+	      <input type="text" id="myInput" onkeyup="mySort()" placeholder="Search for users..">
+	    </div>   
 	    
-  		<div class="container">
-	      <label><b>Follow ID</b></label>
-	      <input type="text"  id="target_id" >
-	    </div>	    
-        <div>
-	      <br>
-	      <button id="follow_button"> Follow </button>
-    	</div>
-    	
+	    <div id="users">
 		{% for id in followlist %}
-		<div id="follow_buttons">
-		    <ul>
+		<div>
+		    <ul id="myUL">
 		        <li>{{id}}</li>
 		    </ul>
 		</div>
 		{% endfor %} 
+		</div>
 	
 	<script src="/static/follow.js"></script>
 	</body>

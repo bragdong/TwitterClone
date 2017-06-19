@@ -15,8 +15,8 @@
     </div>
 
     <div class="container">
-      <label><b>Handle</b></label>
-      <input type="text" value="@"  id="handle" >
+      <label><b>Handle @</b></label>
+      <input type="text" id="handle" >
     </div>
 
     <div class="container">
@@ -58,10 +58,12 @@ var div = document.getElementById('msg');
 
 button.onclick = function () {
 	var username = usernameID.value;
-	var handle = handleID.value;
+	var handle = ('@' + handleID.value);
 	var displayname = displaynameID.value;
 	var password1 = password1ID.value;
 	var password2 = password2ID.value;
+	
+	alert(handle);
 	
     var xhr = new XMLHttpRequest();
     xhr.open('POST', '/register_submit');
