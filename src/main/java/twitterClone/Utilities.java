@@ -36,6 +36,7 @@ public class Utilities {
 	public void addLikes(int tweet_id) {
 		String sql = "UPDATE Tweets SET numLikes = ((SELECT numLikes FROM Tweets WHERE tweet_id = "
 				+ tweet_id + ")+1) WHERE tweet_id =" + tweet_id;
+		System.out.println(sql);
 		
         try (Connection conn = insertConnect();
         		//getNumLikes
