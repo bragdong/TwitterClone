@@ -1,5 +1,11 @@
 package twitterClone;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 public class Utilities {
 
 	
@@ -13,5 +19,32 @@ public class Utilities {
 			
 		}
 
+	}
+	
+	private static Connection insertConnect() {
+		// SQLite connection string
+		String url = "jdbc:sqlite:TwitterClone.db";
+		Connection conn = null;
+		try {
+			conn = DriverManager.getConnection(url);
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+		return conn;
+	}
+	
+	public void addLikes(int tweet_id) {
+		String sql = "UPDATE Tweets SET numLikes = ((SELECT numLikes FROM Tweets WHERE tweet_id = "
+				+ tweet_id + ")+1) WHERE tweet_id =" + tweet_id;
+		
+        try (Connection conn = insertConnect();
+        		//getNumLikes
+                Statement stmt  = conn.createStatement();) {
+
+                stmt.executeUpdate(sql);
+        		
+           } catch (SQLException e) {
+               System.out.println(e.getMessage());
+           }
 	}
 }

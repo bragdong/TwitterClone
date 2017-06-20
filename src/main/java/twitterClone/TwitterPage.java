@@ -166,7 +166,10 @@ public class TwitterPage {
 				int user_id = req.session().attribute("user_id");
 				System.out.println(user_id);
 //				int user_id = user.selectUserID(username);
-				String sql = "select Tweets.user_id, User.user_name, User.display_name, User.handle, tweet_msg, date_time FROM Tweets inner join Follow on Tweets.user_id = Follow.target inner join User on Follow.target = User.user_id where Follow.user_id = " + user_id + " ORDER BY date_time desc;";
+				String sql = "select Tweets.numLikes, Tweets.tweet_id, Tweets.user_id, User.user_name, User.display_name, User.handle, "
+						+ "tweet_msg, date_time FROM Tweets inner join Follow on "
+						+ "Tweets.user_id = Follow.target inner join User on "
+						+ "Follow.target = User.user_id where Follow.user_id = " + user_id + " ORDER BY date_time desc;";
 				System.out.println("**** SQL for user = "+sql);
 				ArrayList a = timeline.selectTimeline(sql);
 				JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/TwitterClone.jtwig");
@@ -194,7 +197,9 @@ public class TwitterPage {
 			} else {
 				String getUsername = req.params(":username");
 				int user_id = req.session().attribute("user_id");			
-				String sql = "select Tweets.user_id, User.user_name, User.display_name, User.handle, tweet_msg, date_time FROM Tweets inner join User on Tweets.user_id = User.user_id  WHERE User.user_name = \"" + getUsername + "\" ORDER BY date_time desc;";
+				String sql = "select Tweets.numLikes, Tweets.tweet_id, Tweets.user_id, User.user_name, User.display_name, User.handle, "
+						+ "tweet_msg, date_time FROM Tweets inner join User on Tweets.user_id = User.user_id  "
+						+ "WHERE User.user_name = \"" + getUsername + "\" ORDER BY date_time desc;";
 				System.out.println("**** SQL for user = "+sql);
 				ArrayList a = timeline.selectTimeline(sql);
 				System.out.println(a.toString());
@@ -260,6 +265,21 @@ public class TwitterPage {
 				//System.out.println("**** SQL for Follow = "+sql);
 				follow.addFollow(user_id, target_id);
 				util_services.routeDisplays(debug,"out","follow_submit");			
+			}
+			return "";
+		});
+		
+		post("/like", (req,res) -> {
+			String loggedin = req.session().attribute("loggedin");
+			if(loggedin == null){
+				System.out.println("not logged in");
+				String redirectUrl = "/login";
+				util_services.routeDisplays(debug,"out","follow_submit");
+				res.redirect(redirectUrl);	
+			} else {
+				int getTweetId = Integer.parseInt(req.queryParams("tweet_id"));
+				System.out.println(getTweetId);
+				util_services.addLikes(getTweetId);
 			}
 			return "";
 		});
