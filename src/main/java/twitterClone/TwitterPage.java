@@ -23,6 +23,7 @@ public class TwitterPage {
 		Utilities util_services = new Utilities();
 		TimeLine timeline = new TimeLine();
 		Follow follow = new Follow();
+		TwitterDAO twitterDAO = new TwitterDAO();
 
 		get("/register", (req, res) -> {
 			util_services.routeDisplays(debug,"in","register");
