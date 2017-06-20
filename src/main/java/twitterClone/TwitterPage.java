@@ -19,15 +19,24 @@ public class TwitterPage {
 	public static void main(String[] args) {
 		staticFileLocation("public/");
 		port(3000);
+		
 		boolean debug = true;
 		Utilities util_services = new Utilities();
 		TimeLine timeline = new TimeLine();
 		Follow follow = new Follow();
 		TwitterDAO twitterDAO = new TwitterDAO();
+		if(args.length>0){
+			String dbInitParm = args[0];
+			if (args[0]==dbInitParm){
+				System.out.println("init db...");
+					twitterDAO.deleteDB();
+					twitterDAO.initDB();					
+			}
+		}
+
 
 		get("/register", (req, res) -> {
 			util_services.routeDisplays(debug,"in","register");
-			System.out.println("entering /register route...");
 			JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/Register.html");
 			JtwigModel model = JtwigModel.newModel();
 			util_services.routeDisplays(debug,"out","register");
@@ -51,11 +60,12 @@ public class TwitterPage {
 			String psw1 = req.queryParams("password1");
 //			String handle = req.queryParams("handle");
 //			String displayName = req.queryParams(displayName);
-			User user = new User();
-			String returnMessage = user.checkLogin(username, psw1);
+//			User user = new User();
+			String returnMessage = twitterDAO.checkLogin(username, psw1);
+//			String returnMessage = user.checkLogin(username, psw1);
 			if (returnMessage == ""){
 				System.out.println("user found so update session object properties.");
-				int user_id = user.selectUserID(username);
+				int user_id = twitterDAO.selectUserID(username);
 				req.session().attribute("user_id",user_id);
 				req.session().attribute("username", username);
 				req.session().attribute("loggedin", "loggedin");
@@ -89,7 +99,7 @@ public class TwitterPage {
 			// psw2);
 			String returnMessage = user.insertUser(username, handle, display_name, psw1, psw2);
 			if (returnMessage == ""){
-				int user_id = user.selectUserID(username);
+				int user_id = twitterDAO.selectUserID(username);
 				req.session().attribute("user_id",user_id);
 				user.addFollow(user_id, user_id);
 			}
