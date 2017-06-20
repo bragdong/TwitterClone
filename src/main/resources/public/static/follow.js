@@ -8,6 +8,7 @@ var div = document.getElementById('msg'); */
 
 
 /* buttons.onclick = function () {
+var buttons = document.getElementsByTagName('button');
 var userid = document.getElementById('user_id');
 alert("user id = "+ userid);
 alert("get element by id ="+follow_button);
@@ -63,10 +64,7 @@ function mySort() {
         }
     };
     
-//  var body = 'target_id=' + encodeURIComponent(target_id) + '&search_id=' + encodeURIComponent(search_id);
-    
     function myFunction(id) {
-    
     var body = 'target_id=' + encodeURIComponent(id);
     console.log(body);
     xhr.send(body);}

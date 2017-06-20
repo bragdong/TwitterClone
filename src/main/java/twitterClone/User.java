@@ -164,4 +164,24 @@ public class User {
            return returnMessage;
 	}
 	
+	public void addLikes(int tweet_id) {
+		String sql = "UPDATE Tweets SET numLikes = ((SELECT numLikes FROM Tweets WHERE tweet_id = "
+				+ tweet_id + ")+1) WHERE tweet_id =" + tweet_id;
+		
+        try (Connection conn = insertConnect();
+        		//getNumLikes
+//                Statement stmt  = conn.createStatement();
+//                ResultSet rs    = stmt.executeQuery(getNumLikes);
+                
+        		PreparedStatement pstmt = conn.prepareStatement(sql);
+        		) {
+
+        		pstmt.executeQuery(sql);
+        		pstmt.executeUpdate();
+        		
+           } catch (SQLException e) {
+               System.out.println(e.getMessage());
+           }
+	}
+	
 }
