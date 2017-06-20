@@ -96,7 +96,7 @@ public class TwitterDAO {
 	}
 
 	public String checkLogin(String username, String password) {
-		String sqlUsername = "SELECT count(*) FROM User where user_name = \"" + username + "\"";
+		String sqlUsername = "SELECT count(*) FROM User where user_name = \"" + username + "\" COLLATE NOCASE";
 		String sqlUsernamePassword = "SELECT count(*) FROM User where user_name = \"" + username + "\" AND password = \"" +  password + "\"";
 		String returnMessage = "";
 		
