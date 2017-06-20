@@ -161,7 +161,7 @@ public class TwitterPage {
 			return tweetMsg;
 		});
 
-		get("/timeLine", (req, res) -> {
+		get("/timeLine", (req, res) -> { //display timeline based on users you're following
 			util_services.routeDisplays(debug,"in","timeLine");
 			String loggedin = req.session().attribute("loggedin");
 			if(loggedin == null){
@@ -176,17 +176,19 @@ public class TwitterPage {
 				int user_id = req.session().attribute("user_id");
 				System.out.println(user_id);
 //				int user_id = user.selectUserID(username);
-				String sql = "select Tweets.numLikes, Tweets.tweet_id, Tweets.user_id, User.user_name, User.display_name, User.handle, "
+				String sql = "select Tweets.numLikes, Tweets.tweet_id, Tweets.user_id, "
+						+ "User.user_name, User.display_name, User.handle, "
 						+ "tweet_msg, date_time FROM Tweets inner join Follow on "
 						+ "Tweets.user_id = Follow.target inner join User on "
-						+ "Follow.target = User.user_id where Follow.user_id = " + user_id + " ORDER BY date_time desc;";
+						+ "Follow.target = User.user_id where Follow.user_id = " 
+						+ user_id + " ORDER BY date_time desc;";
 				System.out.println("**** SQL for user = "+sql);
 				ArrayList a = timeline.selectTimeline(sql);
 				JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/TwitterClone.jtwig");
 				JtwigModel model = JtwigModel.newModel();
 				model.with("timeline", a); //displays bulleted list of tweets of those the user follows
 				model.with("title", "Your Timeline"); //displays at top of page
-				model.with("link1", "<a href=\"/user/" + userName + "\">Your Profile</a>");
+				model.with("link1", "<a href=\"/user/" + userName + "\">Your Profile</a>"); //links
 				model.with("link2", "<a href=\"/tweet/" + userName + "\">Tweet</a>");
 				model.with("link3", "<a href=\"/follow\">Follow</a>");
 				model.with("link4", "<a href=\"/login\">Log out</a>");
@@ -288,10 +290,28 @@ public class TwitterPage {
 				res.redirect(redirectUrl);	
 			} else {
 				int getTweetId = Integer.parseInt(req.queryParams("tweet_id"));
+				int userId = req.session().attribute("user_id");
 				System.out.println(getTweetId);
-				util_services.addLikes(getTweetId);
+				util_services.addLikes(getTweetId, userId);
 			}
-			return "hi";
+			return "";
+		});
+		
+		post("/refreshFeed", (req,rs) -> {
+			req.session().attribute("user_id");
+			int user_id = req.session().attribute("user_id");
+			String sql = "select Tweets.numLikes, Tweets.tweet_id, Tweets.user_id, "
+					+ "User.user_name, User.display_name, User.handle, "
+					+ "tweet_msg, date_time FROM Tweets inner join Follow on "
+					+ "Tweets.user_id = Follow.target inner join User on "
+					+ "Follow.target = User.user_id where Follow.user_id = " 
+					+ user_id + " ORDER BY date_time desc;";
+			System.out.println("**** SQL for user = "+sql);
+			ArrayList a = timeline.selectTimeline(sql);
+//			JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/TwitterClone.jtwig");
+////		JtwigModel model = JtwigModel.newModel();
+//			model.with("timeline", a); //displays bulleted list of tweets of those the user follows
+			return a;
 		});
 		
 	}

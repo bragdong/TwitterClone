@@ -29,7 +29,6 @@ public class Follow {
 		try (Connection conn = insertConnect();
 				Statement stmt = conn.createStatement();
 				ResultSet rs = stmt.executeQuery(sql)) {
-
 			// loop through the result set
 			int i = 0;
 			while (rs.next()) {

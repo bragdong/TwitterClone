@@ -29,7 +29,7 @@ public class TimeLine {
 				Statement stmt = conn.createStatement();
 				ResultSet rs = stmt.executeQuery(sql)) {
 
-			if(!rs.next()) {
+			if (!rs.next()) {
 				tweetList.add("There aren't any tweets to display.  Click the \"Tweet\" link above "
 						+ "to create a new tweet, or click the \"Follow\" link to choose other users to follow!");
 			}
@@ -37,21 +37,20 @@ public class TimeLine {
 			int i = 0;
 			while (rs.next()) {
 				int likes;
-				if(rs.getString("numLikes") == null) {
+				if (rs.getString("numLikes") == null) {
 					likes = 0;
-				} else {likes = rs.getInt("numLikes");}
-				tweetList.add(i, "<a href=\"/user/" + rs.getString("user_name") + "\">" + rs.getString("display_name") 
-				+ "</a>" + "&nbsp" + "<a href=\"/user/" + rs.getString("user_name") + "\">" + rs.getString("handle") 
-				+ "</a>" + "&nbsp" + rs.getString("date_time") + "<br>" + rs.getString("tweet_msg") + "<br>"
-				+ "<button id=\"" + rs.getInt("tweet_id") +"\" type=\"button\" onclick=\"myFunction(this.id)\">"
-						+ "Like (" + likes + ")</button>");
-				 System.out.println(
-				 rs.getString("user_id") + "\t" +
-				 rs.getString("user_name") + "\t" +
-				 rs.getString("display_name") + "\t" +
-				 rs.getString("handle") + "\t" +
-				 rs.getString("tweet_msg") + "\t" +
-				 rs.getString("date_time"));
+				} else {
+					likes = rs.getInt("numLikes");
+				}
+				tweetList.add(i, "<a href=\"/user/" + rs.getString("user_name") + "\">" + rs.getString("display_name")
+						+ "</a>" + "&nbsp" + "<a href=\"/user/" + rs.getString("user_name") + "\">"
+						+ rs.getString("handle") + "</a>" + "&nbsp" + rs.getString("date_time") + "<br>"
+						+ rs.getString("tweet_msg") + "<br>" + "<button id=\"" + rs.getInt("tweet_id")
+						+ "\" type=\"button\" onclick=\"myFunction(this.id)\">" + "Like (" + likes + ")</button>");
+				System.out.println(rs.getString("user_id") + "\t" + rs.getString("user_name") + "\t"
+						+ rs.getString("display_name") + "\t" + rs.getString("handle") + "\t"
+						+ rs.getString("tweet_msg") + "\t" + rs.getString("date_time"));
+						//use printf for the above?
 				i += 1;
 			}
 		} catch (SQLException e) {
@@ -59,6 +58,5 @@ public class TimeLine {
 		}
 		return tweetList;
 	}
-
 
 }

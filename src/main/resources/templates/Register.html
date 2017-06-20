@@ -63,7 +63,7 @@ button.onclick = function () {
 	var password1 = password1ID.value;
 	var password2 = password2ID.value;
 	
-	alert(handle);
+	var usernameLower = username.toLowerCase();
 	
     var xhr = new XMLHttpRequest();
     xhr.open('POST', '/register_submit');
@@ -82,7 +82,7 @@ button.onclick = function () {
             alert('Request failed.  Returned status of ' + xhr.status);
         }
     };
-    var body = 'username=' + encodeURIComponent(username) + '&handle=' + encodeURIComponent(handle)
+    var body = 'username=' + encodeURIComponent(usernameLower) + '&handle=' + encodeURIComponent(handle)
     +'&displayname=' + encodeURIComponent(displayname) + '&password1=' + encodeURIComponent(password1)
     +'&password2=' + encodeURIComponent(password2);
     console.log(body);

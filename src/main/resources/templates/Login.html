@@ -42,8 +42,10 @@ var p = document.createElement('p');
 var div = document.getElementById('msg');
 
 button.onclick = function () {
-	var username = usernameID.value;
-	var password1 = password1ID.value;
+var username = usernameID.value;
+var password1 = password1ID.value;
+
+var usernameLower = username.toLowerCase();
 
     var xhr = new XMLHttpRequest();
     xhr.open('POST', '/login_submit');
@@ -58,7 +60,7 @@ button.onclick = function () {
             alert('Request failed.  Returned status of ' + xhr.status);
         }
     };
-    var body = 'username=' + encodeURIComponent(username) + '&password1=' + encodeURIComponent(password1);
+    var body = 'username=' + encodeURIComponent(usernameLower) + '&password1=' + encodeURIComponent(password1);
     console.log(body);
     xhr.send(body);
 };
