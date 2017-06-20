@@ -8,8 +8,10 @@
 <body>
   <h1>{{title}}</h1>
 
-  <h4>{{link1}}&emsp;{{link2}}&emsp;{{link3}}&emsp;{{link4}}</h4> {% for id in timeline %}
-  <div>
+  <h4>{{link1}}&emsp;{{link2}}&emsp;{{link3}}&emsp;{{link4}}</h4> 
+  
+  {% for id in timeline %}
+  <div id="jtwig">
     <ul>
       <li>{{id}}</li>
     </ul>
@@ -17,7 +19,23 @@
   {% endfor %}
 
 <script>    
-    setInterval(function() {window.location.reload();}, 10000);
+/*   setInterval(function() {
+	    var xhr = new XMLHttpRequest();
+	    xhr.open('POST', '/refreshFeed');
+	    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+	        xhr.onload = function() {
+	    	if (xhr.status === 200) {
+				console.log(xhr.responseText);
+				if (xhr.responseText == "") {
+	    			console.log("hi"); } 
+	        } else if (xhr.status !== 200) {
+	            alert('Request failed.  Returned status of ' + xhr.status);
+	        }
+	   		};
+	    xhr.send(); 
+	    
+   	}, 10000); */
+    
     
     var body;
     
@@ -37,7 +55,6 @@
             alert('Request failed.  Returned status of ' + xhr.status);
         }
    		};
-    
     xhr.send(body); 
     }
     
