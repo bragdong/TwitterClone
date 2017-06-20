@@ -36,14 +36,14 @@ public class TimeLine {
 			// loop through the result set
 			int i = 0;
 			while (rs.next()) {
-				String likes;
+				int likes;
 				if(rs.getString("numLikes") == null) {
-					likes = "0";
-				} else {likes = rs.getString("numLikes");}
+					likes = 0;
+				} else {likes = rs.getInt("numLikes");}
 				tweetList.add(i, "<a href=\"/user/" + rs.getString("user_name") + "\">" + rs.getString("display_name") 
 				+ "</a>" + "&nbsp" + "<a href=\"/user/" + rs.getString("user_name") + "\">" + rs.getString("handle") 
 				+ "</a>" + "&nbsp" + rs.getString("date_time") + "<br>" + rs.getString("tweet_msg") + "<br>"
-				+ "<button id=\"" + rs.getInt("tweet_id") +"\" type=\"button\">"
+				+ "<button id=\"" + rs.getInt("tweet_id") +"\" type=\"button\" onclick=\"myFunction(this.id)\">"
 						+ "Like (" + likes + ")</button>");
 				 System.out.println(
 				 rs.getString("user_id") + "\t" +

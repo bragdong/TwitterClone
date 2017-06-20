@@ -269,9 +269,17 @@ public class TwitterPage {
 		});
 		
 		post("/like", (req,res) -> {
-			User user = new User();
-			int getTweetId = Integer.parseInt(req.params("tweet_id"));
-			user.addLikes(getTweetId);
+			String loggedin = req.session().attribute("loggedin");
+			if(loggedin == null){
+				System.out.println("not logged in");
+				String redirectUrl = "/login";
+				util_services.routeDisplays(debug,"out","follow_submit");
+				res.redirect(redirectUrl);	
+			} else {
+				int getTweetId = Integer.parseInt(req.queryParams("tweet_id"));
+				System.out.println(getTweetId);
+				util_services.addLikes(getTweetId);
+			}
 			return "";
 		});
 		
