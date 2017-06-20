@@ -291,7 +291,7 @@ public class TwitterPage {
 				System.out.println(getTweetId);
 				util_services.addLikes(getTweetId);
 			}
-			return "hi";
+			return "";
 		});
 		
 	}

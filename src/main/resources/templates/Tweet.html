@@ -32,7 +32,7 @@ var p = document.createElement('p');
 var div = document.getElementById('msg');
 
 button.onclick = function () {
-	tweet = tweet.value;
+	tweetVal = tweet.value;
 	
     var xhr = new XMLHttpRequest();
     xhr.open('POST', '/tweet1');
@@ -40,6 +40,7 @@ button.onclick = function () {
     xhr.onload = function() {
     	if (xhr.status === 200) {
         	div.appendChild(p);
+        	tweet.value = "";
     		p.innerHTML = "Your tweet has been posted!";
     		setTimeout(function() {
     			p.innerHTML = "";}, 2000);
@@ -47,7 +48,7 @@ button.onclick = function () {
             alert('Request failed.  Returned status of ' + xhr.status);
         }
     };
-    var body = 'tweet=' + encodeURIComponent(tweet);
+    var body = 'tweet=' + encodeURIComponent(tweetVal);
     console.log(body);
     xhr.send(body);
 };
