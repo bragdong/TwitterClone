@@ -23,7 +23,7 @@ public class TwitterDAO {
 
 	public  int initDB(){
 		//String createUserTableSql="CREATE TABLE `User` ( `user_id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, `user_name` TEXT NOT NULL UNIQUE, `handle` TEXT NOT NULL UNIQUE, `display_name` TEXT NOT NULL, `password` TEXT NOT NULL )";
-		//String createTweetTableSql="CREATE TABLE `Tweets` ( `tweet_id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, `user_id` INTEGER NOT NULL, `tweet_msg` TEXT NOT NULL, `date_time` TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, `numLikes` INTEGER, FOREIGN KEY(`user_id`) REFERENCES `User`(`user_id`) )";
+		//String createTweetTableSql="CREATE TABLE `Tweets` ( `tweet_id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, `user_id` INTEGER NOT NULL, `tweet_msg` TEXT NOT NULL, `date_time` TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, `numLikes` INTEGER DEFAULT 0, FOREIGN KEY(`user_id`) REFERENCES `User`(`user_id`) )";
 		//String createFollowTableSql="CREATE TABLE `Follow` ( `follow_id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, `user_id` INTEGER NOT NULL, `target` INTEGER NOT NULL, FOREIGN KEY(`user_id`) REFERENCES User (user_id) )";
 		String sql = "CREATE TABLE if not exists `Temp` ( `follow_id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, `user_id` INTEGER NOT NULL, `target` INTEGER NOT NULL, FOREIGN KEY(`user_id`) REFERENCES User (user_id) )";
 		String sql2 = "CREATE TABLE if not exists `Temp2` ( `follow_id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, `user_id` INTEGER NOT NULL, `target` INTEGER NOT NULL, FOREIGN KEY(`user_id`) REFERENCES User (user_id) )";
