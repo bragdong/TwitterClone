@@ -27,11 +27,12 @@
 	    	if (xhr.status === 200) {
 				console.log(xhr.responseText);
 				if (xhr.responseText == "") {
-	    			console.log("hi"); } 
+	    			console.log("hi"); 
+	    		} 
 	        } else if (xhr.status !== 200) {
 	            alert('Request failed.  Returned status of ' + xhr.status);
 	        }
-	   		};
+	   	};
 	    xhr.send(); 
 	    
    	}, 10000); */

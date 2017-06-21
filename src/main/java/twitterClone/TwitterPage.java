@@ -174,7 +174,6 @@ public class TwitterPage {
 			} else {
 				User user = new User();
 				String userName = req.session().attribute("username");
-				req.session().attribute("user_id");
 				int user_id = req.session().attribute("user_id");
 				System.out.println(user_id);
 //				int user_id = user.selectUserID(username);
@@ -183,9 +182,10 @@ public class TwitterPage {
 						+ "tweet_msg, date_time FROM Tweets inner join Follow on "
 						+ "Tweets.user_id = Follow.target inner join User on "
 						+ "Follow.target = User.user_id where Follow.user_id = " 
-						+ user_id + " ORDER BY date_time desc;";
+						+ user_id + " ORDER BY date_time DESC;";
 				System.out.println("**** SQL for user = "+sql);
 				ArrayList a = timeline.selectTimeline(sql);
+				System.out.println(a.size());
 				JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/TwitterClone.jtwig");
 				JtwigModel model = JtwigModel.newModel();
 				model.with("timeline", a); //displays bulleted list of tweets of those the user follows
