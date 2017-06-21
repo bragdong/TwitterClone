@@ -96,33 +96,7 @@ public class TwitterPage {
 			String psw1 = req.queryParams("password1");
 			String psw2 = req.queryParams("password2");
 			User user = new User();
-			// int returnCde = 0;
-			// returnCde=user.insertUser(username, handle, display_name, psw1,
-			// psw2);
 			String returnMessage = user.insertUser(username, handle, display_name, psw1, psw2);
-			if (returnMessage == "") {
-				int user_id = twitterDAL.selectUserID(username);
-				req.session().attribute("user_id", user_id);
-				user.addFollow(user_id, user_id);
-			}
-
-			// if(returnCde == -1){
-			// System.out.println("Passwords entered are not the same.");
-			// System.out.println("show register page again");
-			// } else{
-			// System.out.println("back in main page");
-			// System.out.println("navigate to user home page");
-			// }
-
-			// String second = req.queryParams("second");
-			// try {
-			// int a = Integer.parseInt(first);
-			//// int b = Integer.parseInt(second);
-			// return new Integer(a + b).toString();
-			// } catch (NumberFormatException ex) {
-			// System.out.println("bad input");
-			// }
-			// return "failure";
 			util_services.routeDisplays(debug, "out", "register_submit");
 			return returnMessage;
 		});
