@@ -33,8 +33,7 @@ public class Follow {
 			int i = 0;
 			while (rs.next()) {
 //				                                                                                                                        <button type="button">Click Me!</button>
-				followlist.add(i, rs.getString("display_name") + rs.getString("handle") + "&nbsp"
-						+ rs.getString("user_id") + "&nbsp" + "<button id=\""
+				followlist.add(i, rs.getString("display_name") + "&emsp;" + rs.getString("handle") + "&emsp;" + "<button id=\""
 						+rs.getString("user_id")+"\" type=\"button\" onclick=\"myFunction(this.id)\"> Follow</button>");
 //				followlist.add(i, "<a href=\"/user/" + rs.getString("user_name") + "\">" + rs.getString("display_name") + "</a>" + "&nbsp" + "<a href=\"/user/" + rs.getString("user_name") + "\">" + rs.getString("handle") + "</a>" + "&nbsp" +  rs.getString("user_id"));
 //				tweetList.add(i, "<a href=\"/user/" + rs.getString("user_name") + "\">" + rs.getString("display_name") + "</a>" + "&nbsp" + "<a href=\"/user/" + rs.getString("user_name") + "\">" + rs.getString("handle") + "</a>" + "&nbsp" + rs.getString("date_time") + "<br>" + rs.getString("tweet_msg") );
