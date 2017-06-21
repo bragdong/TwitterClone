@@ -30,10 +30,11 @@ public class TwitterPage {
 			String dbInitParm = args[0];
 			if (args[0]==dbInitParm){
 				System.out.println("Initializing Twitter Database...");
-					twitterDAL.deleteDB();		
+					twitterDAL.deleteDB();	
+					twitterDAL.createDB();
 			}
 		}
-		twitterDAL.createDB();
+
 
 
 		get("/register", (req, res) -> {
