@@ -1,5 +1,7 @@
 package twitterClone;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -13,6 +15,7 @@ public class User {
 	private String handle;
 	private String display_name;
 	private String password;
+	private Object hashedPassword;
 
 	public static Connection insertConnect() {
 		// SQLite connection string
@@ -57,10 +60,14 @@ public class User {
 				conn.setAutoCommit(false);
 				if (checkUser(username) == "pass"
 						&& checkHandle(handle) == "pass") {
+					
+					//HASH PASSWORD
+					String hashedPassword = hashPassword(password1);
+					
 					pstmt.setString(1, username);
 					pstmt.setString(2, handle);
 					pstmt.setString(3, display_name);
-					pstmt.setString(4, password1);
+					pstmt.setString(4, hashedPassword);
 					pstmt.executeUpdate();
 //					TwitterDAL twitterDAL = new TwitterDAL();
 //					User user = new User();
@@ -206,4 +213,20 @@ public class User {
 	// return returnMessage;
 	// }
 
+	public String hashPassword(String password) {
+        final String SALT = "GOFORCODE";
+        this.hashedPassword = password + SALT;
+        MessageDigest md = null;
+        try {
+            md = MessageDigest.getInstance("SHA");
+        } catch (NoSuchAlgorithmException ex) {
+            System.out.println(ex);
+        }
+        md.update(password.getBytes());
+        String digest = new String(md.digest());
+        this.hashedPassword=digest;
+        
+        return (String) this.hashedPassword;
+    }
+	
 }
