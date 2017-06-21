@@ -175,7 +175,6 @@ public class TwitterPage {
 			} else {
 				User user = new User();
 				String userName = req.session().attribute("username");
-				req.session().attribute("user_id");
 				int user_id = req.session().attribute("user_id");
 				System.out.println(user_id);
 				// int user_id = user.selectUserID(username);
@@ -187,6 +186,7 @@ public class TwitterPage {
 						+ " ORDER BY date_time desc LIMIT 10;";
 				System.out.println("**** SQL for user = " + sql);
 				ArrayList a = timeline.selectTimeline(sql);
+				System.out.println(a.size());
 				JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/TwitterClone.jtwig");
 				JtwigModel model = JtwigModel.newModel();
 				model.with("timeline", a); // displays bulleted list of tweets
