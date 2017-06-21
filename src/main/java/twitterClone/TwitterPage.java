@@ -25,14 +25,15 @@ public class TwitterPage {
 		TimeLine timeline = new TimeLine();
 		Follow follow = new Follow();
 		TwitterDAL twitterDAL = new TwitterDAL();
-		if(args.length>0){
+		// if init is passed in as a runtime argument the tables will be dropped and subsequently recreated for a clean DB
+		if(args.length>0){  
 			String dbInitParm = args[0];
 			if (args[0]==dbInitParm){
-				System.out.println("init db...");
-					twitterDAL.deleteDB();
-					twitterDAL.initDB();					
+				System.out.println("Initializing Twitter Database...");
+					twitterDAL.deleteDB();		
 			}
 		}
+		twitterDAL.createDB();
 
 
 		get("/register", (req, res) -> {
