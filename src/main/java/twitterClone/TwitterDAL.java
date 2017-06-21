@@ -93,8 +93,10 @@ public class TwitterDAL {
 	}
 
 	public String checkLogin(String username, String password) {
+		User user = new User();
+		String hashedPassword = user.hashPassword(password);
 		String sqlUsername = "SELECT count(*) FROM User where user_name = \"" + username + "\" COLLATE NOCASE";
-		String sqlUsernamePassword = "SELECT count(*) FROM User where user_name = \"" + username + "\" AND password = \"" +  password + "\"";
+		String sqlUsernamePassword = "SELECT count(*) FROM User where user_name = \"" + username + "\" AND password = \"" +  hashedPassword + "\"";
 		String returnMessage = "";
 		
         try (Connection conn = insertConnect2();
