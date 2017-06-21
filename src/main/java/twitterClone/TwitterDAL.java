@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class TwitterDAO {
+public class TwitterDAL {
 
 	
 	private static Connection insertConnect2() {
