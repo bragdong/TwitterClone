@@ -199,8 +199,8 @@ public class TwitterPage {
 				JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/TwitterClone.jtwig");
 				JtwigModel model = JtwigModel.newModel();
 				model.with("timeline", a);
-				model.with("title", getUsername);
-				model.with("link1", "<a href=\"/tweet/" + upperGetUsername + "\">Tweet</a>");
+				model.with("title", upperGetUsername);
+				model.with("link1", "<a href=\"/tweet/" + getUsername + "\">Tweet</a>");
 				model.with("link2", "<a href=\"/timeLine\">Timeline</a>");
 				model.with("link3", "<a href=\"/follow\">Follow</a>");
 				model.with("link4", "<a href=\"/login\">Log out</a>");
@@ -244,34 +244,26 @@ public class TwitterPage {
 
 		post("/follow_submit", (req, res) -> {
 			util_services.routeDisplays(debug, "in", "follow_submit");
-			String loggedin = req.session().attribute("loggedin");
-			if (loggedin == null) {
-				System.out.println("not logged in");
-				String redirectUrl = "/login";
-				util_services.routeDisplays(debug, "out", "follow_submit");
-				res.redirect(redirectUrl);
-			} else {
-				int user_id = req.session().attribute("user_id");
-				// int search_id =
-				// Integer.parseInt(req.queryParams("search_id"));
-				int target_id = Integer.parseInt(req.queryParams("target_id"));
-				// System.out.println("search id from search = "+search_id);
-				System.out.println("target id from search = " + target_id);
-				// String sql = "INSERT INTO handle,display_name,User.user_id
-				// FROM User WHERE User.user_id not in (SELECT target FROM
-				// Follow WHERE Follow.user_id=23);";
-				// String sql = "select Tweets.user_id, User.display_name,
-				// User.handle, tweet_msg, date_time FROM Tweets inner join User
-				// on Tweets.user_id = User.user_id WHERE user.user_id = " +
-				// user_id + " ORDER BY date_time desc;";
-				// System.out.println("**** SQL for Follow = "+sql);
-				follow.addFollow(user_id, target_id);
-				util_services.routeDisplays(debug, "out", "follow_submit");
-			}
+			int user_id = req.session().attribute("user_id");
+			// int search_id =
+			// Integer.parseInt(req.queryParams("search_id"));
+			int target_id = Integer.parseInt(req.queryParams("target_id"));
+			// System.out.println("search id from search = "+search_id);
+			System.out.println("target id from search = " + target_id);
+			// String sql = "INSERT INTO handle,display_name,User.user_id
+			// FROM User WHERE User.user_id not in (SELECT target FROM
+			// Follow WHERE Follow.user_id=23);";
+			// String sql = "select Tweets.user_id, User.display_name,
+			// User.handle, tweet_msg, date_time FROM Tweets inner join User
+			// on Tweets.user_id = User.user_id WHERE user.user_id = " +
+			// user_id + " ORDER BY date_time desc;";
+			// System.out.println("**** SQL for Follow = "+sql);
+			follow.addFollow(user_id, target_id);
+			util_services.routeDisplays(debug, "out", "follow_submit");
 			return "";
 		});
 
-		post("/like", (req, res) -> {
+	post("/like", (req, res) -> {
 			int getTweetId = Integer.parseInt(req.queryParams("tweet_id"));
 			int userId = req.session().attribute("user_id");
 			System.out.println(getTweetId);
