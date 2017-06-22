@@ -10,14 +10,18 @@
 
   <h4>{{link1}}&emsp;{{link2}}&emsp;{{link3}}&emsp;{{link4}}</h4> 
   
+
   {% for id in timeline %}
   <div id="jtwig">
-    <ul style="list-style: none;">
+    <ul style="list-style: none; background-color: lightgrey;">
       <li>{{id}}</li>
     </ul>
   </div>
   {% endfor %}
 
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script>    
 /*   setInterval(function() {
 	    var xhr = new XMLHttpRequest();
@@ -41,7 +45,7 @@
     var body;
     
 	function myFunction(id) {
-    body = 'tweet_id=' + encodeURIComponent(id);
+    body = 'tweet_id=' + encodeURIComponent(id); 
     console.log(body);
     
     var xhr = new XMLHttpRequest();
@@ -58,7 +62,10 @@
    		};
     xhr.send(body); 
     }
-    
+
+//	$("ul").css("background-color", "LigthGrey");
+//	$("ul:odd").css("background-color", "LightGrey");
+
 </script>
 
 </body>
