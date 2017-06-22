@@ -7,6 +7,7 @@ import org.jtwig.JtwigTemplate;
 
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Properties;
 
 import com.google.gson.Gson;
 
@@ -21,12 +22,14 @@ public class TwitterPage {
 		port(3000);
 
 		boolean debug = true;
+
+		Properties dbConnection = new Properties();
+		dbConnection.put("db", "jdbc:sqlite:TwitterClone.db");
+		final String dbConnection1 = dbConnection.getProperty("db");
+
 		Utilities util_services = new Utilities();
-		TimeLine timeline = new TimeLine();
-		Follow follow = new Follow();
 		TwitterDAL twitterDAL = new TwitterDAL();
-		// if init is passed in as a runtime argument the tables will be dropped
-		// and subsequently recreated for a clean DB
+
 		if (args.length > 0) {
 			String dbInitParm = args[0];
 			if (args[0] == dbInitParm) {
@@ -38,7 +41,8 @@ public class TwitterPage {
 
 		get("/register", (req, res) -> {
 			util_services.routeDisplays(debug, "in", "register");
-			JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/Register.html");
+			JtwigTemplate template = JtwigTemplate
+					.classpathTemplate("templates/Register.html");
 			JtwigModel model = JtwigModel.newModel();
 			util_services.routeDisplays(debug, "out", "register");
 			return template.render(model);
@@ -47,8 +51,10 @@ public class TwitterPage {
 		get("/login", (req, res) -> {
 			util_services.routeDisplays(debug, "in", "login");
 			req.session().attribute("loggedin", null);
-			System.out.println("this is your Session ID: " + req.session().id());
-			JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/Login.html");
+			System.out
+					.println("this is your Session ID: " + req.session().id());
+			JtwigTemplate template = JtwigTemplate
+					.classpathTemplate("templates/Login.html");
 			JtwigModel model = JtwigModel.newModel();
 			util_services.routeDisplays(debug, "out", "login");
 			return template.render(model);
@@ -56,34 +62,18 @@ public class TwitterPage {
 
 		post("/login_submit", (req, res) -> { // login check
 			util_services.routeDisplays(debug, "in", "login_submit");
-			// System.out.println("Is session new? "+ req.session().isNew());
-			// //why is it false?
 			String username = req.queryParams("username");
 			String psw1 = req.queryParams("password1");
-			// String handle = req.queryParams("handle");
-			// String displayName = req.queryParams(displayName);
-			// User user = new User();
-			String returnMessage = twitterDAL.checkLogin(username, psw1);
-			// String returnMessage = user.checkLogin(username, psw1);
-			if (returnMessage == "") {
-				System.out.println("user found so update session object properties.");
-				int user_id = twitterDAL.selectUserID(username);
-				req.session().attribute("user_id", user_id);
-				req.session().attribute("username", username);
+			User userEmpty = twitterDAL.checkLogin(username, psw1);
+			String returnMessage;
+			if (userEmpty != null) {
+				User user = twitterDAL.selectUser(username, userEmpty);
+				req.session().attribute("user", user);
 				req.session().attribute("loggedin", "loggedin");
-				// req.session().attribute("handle", handle);
-				// req.session().attribute("displayName", "loggedin");
-				// String s = req.session().attribute("username");
-				// boolean l = req.session().attribute("loggedin");
-				System.out.println("User logged in = " + req.session().attribute("username"));
-				System.out.println("User ID = " + req.session().attribute("user_id"));
-				System.out.println("logged in status = " + req.session().attribute("loggedin"));
+				returnMessage = "";
+			} else {
+				returnMessage = "Invalid username or password. Please re-enter.";
 			}
-
-			// System.out.println("Username entered = "+username);
-			// System.out.println("Password entered = "+psw1);
-			// System.out.println("Call checkUser and navigate to user Home Page
-			// if valid.");
 			util_services.routeDisplays(debug, "out", "login_submit");
 			return returnMessage;
 		});
@@ -95,8 +85,8 @@ public class TwitterPage {
 			String display_name = req.queryParams("displayname");
 			String psw1 = req.queryParams("password1");
 			String psw2 = req.queryParams("password2");
-			User user = new User();
-			String returnMessage = user.insertUser(username, handle, display_name, psw1, psw2);
+			User user = new User(username, handle, display_name, psw1);
+			String returnMessage = twitterDAL.insertUser(user, psw2);
 			util_services.routeDisplays(debug, "out", "register_submit");
 			return returnMessage;
 		});
@@ -110,10 +100,12 @@ public class TwitterPage {
 				util_services.routeDisplays(debug, "out", "tweet");
 				res.redirect(redirectUrl);
 			} else {
-				String getUsername = req.params(":username");
-				JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/tweet.html");
+				User user = req.session().attribute("user");
+				JtwigTemplate template = JtwigTemplate
+						.classpathTemplate("templates/tweet.html");
 				JtwigModel model = JtwigModel.newModel();
-				model.with("link1", "<a href=\"/user/" + getUsername + "\">Your Profile</a>");
+				model.with("link1", "<a href=\"/user/" + user.getUsername()
+						+ "\">Your Profile</a>");
 				model.with("link2", "<a href=\"/timeLine\">Timeline</a>");
 				model.with("link3", "<a href=\"/follow\">Follow</a>");
 				model.with("link4", "<a href=\"/login\">Log out</a>");
@@ -126,19 +118,13 @@ public class TwitterPage {
 		post("/tweet1", (req, res) -> {
 			util_services.routeDisplays(debug, "in", "tweet1");
 			String tweetMsg = req.queryParams("tweet");
-			Tweet tweet = new Tweet();
-			System.out.println("User logged in = " + req.session().attribute("username"));
-			System.out.println("User ID = " + req.session().attribute("user_id"));
-			System.out.println("logged in status = " + req.session().attribute("loggedin"));
-			int user_id = req.session().attribute("user_id");
-			System.out.println("id before insert" + user_id);
-			tweet.insertTweet(user_id, tweetMsg);
+			User user = req.session().attribute("user");
+			twitterDAL.insertTweet(user.getUser_id(), tweetMsg);
 			util_services.routeDisplays(debug, "out", "tweet1");
 			return tweetMsg;
 		});
 
-		get("/timeLine", (req, res) -> { // display timeline based on users
-											// you're following
+		get("/timeLine", (req, res) -> {
 			util_services.routeDisplays(debug, "in", "timeLine");
 			String loggedin = req.session().attribute("loggedin");
 			if (loggedin == null) {
@@ -147,27 +133,26 @@ public class TwitterPage {
 				util_services.routeDisplays(debug, "out", "timeLine");
 				res.redirect(redirectUrl);
 			} else {
-				User user = new User();
-				String userName = req.session().attribute("username");
-				int user_id = req.session().attribute("user_id");
-				System.out.println(user_id);
-				// int user_id = user.selectUserID(username);
+				User user = req.session().attribute("user");
 				String sql = "select Tweets.numLikes, Tweets.tweet_id, Tweets.user_id, "
 						+ "User.user_name, User.display_name, User.handle, "
 						+ "tweet_msg, date_time FROM Tweets inner join Follow on "
 						+ "Tweets.user_id = Follow.target inner join User on "
-						+ "Follow.target = User.user_id where Follow.user_id = " + user_id
+						+ "Follow.target = User.user_id where Follow.user_id = "
+						+ user.getUser_id()
 						+ " ORDER BY date_time desc LIMIT 10;";
 				System.out.println("**** SQL for user = " + sql);
-				ArrayList a = timeline.selectTimeline(sql);
+				ArrayList a = twitterDAL.selectTimeline(sql);
 				System.out.println(a.size());
-				JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/TwitterClone.jtwig");
+				JtwigTemplate template = JtwigTemplate
+						.classpathTemplate("templates/TwitterClone.jtwig");
 				JtwigModel model = JtwigModel.newModel();
-				model.with("timeline", a); // displays bulleted list of tweets
-											// of those the user follows
-				model.with("title", "Timeline"); // displays at top of page
-				model.with("link1", "<a href=\"/user/" + userName + "\">Your Profile</a>"); // links
-				model.with("link2", "<a href=\"/tweet/" + userName + "\">Tweet</a>");
+				model.with("timeline", a);
+				model.with("title", "Timeline");
+				model.with("link1", "<a href=\"/user/" + user.getUsername()
+						+ "\">Your Profile</a>");
+				model.with("link2", "<a href=\"/tweet/" + user.getUsername()
+						+ "\">Tweet</a>");
 				model.with("link3", "<a href=\"/follow\">Follow</a>");
 				model.with("link4", "<a href=\"/login\">Log out</a>");
 				util_services.routeDisplays(debug, "out", "timeLine");
@@ -185,26 +170,26 @@ public class TwitterPage {
 				util_services.routeDisplays(debug, "out", "user");
 				res.redirect(redirectUrl);
 			} else {
-				String getUsername = req.params(":username");
-				String upperGetUsername = getUsername.substring(0, 1).toUpperCase() + getUsername.substring(1); // Uppercase
-																												// for
-																												// Username
-				int user_id = req.session().attribute("user_id");
+				User user = req.session().attribute("user");
+				String upperGetUsername = user.getUsername().substring(0, 1)
+						.toUpperCase() + user.getUsername().substring(1); // Uppercase
 				String sql = "select Tweets.numLikes, Tweets.tweet_id, Tweets.user_id, User.user_name, User.display_name, User.handle, "
 						+ "tweet_msg, date_time FROM Tweets inner join User on Tweets.user_id = User.user_id  "
-						+ "WHERE User.user_name = \"" + getUsername + "\" ORDER BY date_time desc LIMIT 10;";
+						+ "WHERE User.user_name = \"" + user.getUsername()
+						+ "\" ORDER BY date_time desc LIMIT 10;";
 				System.out.println("**** SQL for user = " + sql);
-				ArrayList a = timeline.selectTimeline(sql);
+				ArrayList a = twitterDAL.selectTimeline(sql);
 				System.out.println(a.toString());
-				JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/TwitterClone.jtwig");
+				JtwigTemplate template = JtwigTemplate
+						.classpathTemplate("templates/TwitterClone.jtwig");
 				JtwigModel model = JtwigModel.newModel();
 				model.with("timeline", a);
 				model.with("title", upperGetUsername);
-				model.with("link1", "<a href=\"/tweet/" + getUsername + "\">Tweet</a>");
+				model.with("link1", "<a href=\"/tweet/" + user.getUsername()
+						+ "\">Tweet</a>");
 				model.with("link2", "<a href=\"/timeLine\">Timeline</a>");
 				model.with("link3", "<a href=\"/follow\">Follow</a>");
 				model.with("link4", "<a href=\"/login\">Log out</a>");
-				// Timeline.getTimeline(user_id);
 				util_services.routeDisplays(debug, "out", "user");
 				return template.render(model);
 			}
@@ -220,21 +205,20 @@ public class TwitterPage {
 				util_services.routeDisplays(debug, "out", "follow");
 				res.redirect(redirectUrl);
 			} else {
-				int user_id = req.session().attribute("user_id");
-				String getUsername = req.session().attribute("username");
-				String sql = "select handle,display_name,User.user_name,User.user_id from User where User.user_id not in (select target from Follow where Follow.user_id="
-						+ user_id + ");";
-				// String sql = "select Tweets.user_id, User.display_name,
-				// User.handle, tweet_msg, date_time FROM Tweets inner join User
-				// on Tweets.user_id = User.user_id WHERE user.user_id = " +
-				// user_id + " ORDER BY date_time desc;";
+				User user = req.session().attribute("user");
+				String sql = "select handle,display_name,User.user_name,User.user_id from User "
+						+ "where User.user_id not in (select target from Follow where Follow.user_id="
+						+ user.getUser_id() + ");";
 				System.out.println("**** SQL for Follow = " + sql);
-				ArrayList a = follow.selectTimeline(sql);
-				JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/Follow.html");
+				ArrayList a = twitterDAL.selectFollow(sql);
+				JtwigTemplate template = JtwigTemplate
+						.classpathTemplate("templates/Follow.html");
 				JtwigModel model = JtwigModel.newModel().with("followlist", a);
-				model.with("link1", "<a href=\"/tweet/" + getUsername + "\">Tweet</a>");
+				model.with("link1", "<a href=\"/tweet/" + user.getUsername()
+						+ "\">Tweet</a>");
 				model.with("link2", "<a href=\"/timeLine\">Timeline</a>");
-				model.with("link3", "<a href=\"/user/" + getUsername + "\">Your Profile</a>");
+				model.with("link3", "<a href=\"/user/" + user.getUsername()
+						+ "\">Your Profile</a>");
 				model.with("link4", "<a href=\"/login\">Log out</a>");
 				util_services.routeDisplays(debug, "out", "follow");
 				return template.render(model);
@@ -244,33 +228,23 @@ public class TwitterPage {
 
 		post("/follow_submit", (req, res) -> {
 			util_services.routeDisplays(debug, "in", "follow_submit");
-			int user_id = req.session().attribute("user_id");
-			// int search_id =
-			// Integer.parseInt(req.queryParams("search_id"));
+			User user = req.session().attribute("user");
 			int target_id = Integer.parseInt(req.queryParams("target_id"));
-			// System.out.println("search id from search = "+search_id);
 			System.out.println("target id from search = " + target_id);
-			// String sql = "INSERT INTO handle,display_name,User.user_id
-			// FROM User WHERE User.user_id not in (SELECT target FROM
-			// Follow WHERE Follow.user_id=23);";
-			// String sql = "select Tweets.user_id, User.display_name,
-			// User.handle, tweet_msg, date_time FROM Tweets inner join User
-			// on Tweets.user_id = User.user_id WHERE user.user_id = " +
-			// user_id + " ORDER BY date_time desc;";
-			// System.out.println("**** SQL for Follow = "+sql);
-			follow.addFollow(user_id, target_id);
+			twitterDAL.addFollow(user.getUser_id(), target_id);
 			util_services.routeDisplays(debug, "out", "follow_submit");
 			return "";
 		});
 
-	post("/like", (req, res) -> {
+		post("/like", (req, res) -> {
 			int getTweetId = Integer.parseInt(req.queryParams("tweet_id"));
-			int userId = req.session().attribute("user_id");
+			User user = req.session().attribute("user");
 			System.out.println(getTweetId);
-			util_services.addLikes(getTweetId, userId);
+			twitterDAL.addLikes(getTweetId, user.getUser_id());
 			return "";
 		});
 
+		// not being used at the moment (6/22)
 		post("/refreshFeed", (req, rs) -> {
 			req.session().attribute("user_id");
 			int user_id = req.session().attribute("user_id");
@@ -278,9 +252,10 @@ public class TwitterPage {
 					+ "User.user_name, User.display_name, User.handle, "
 					+ "tweet_msg, date_time FROM Tweets inner join Follow on "
 					+ "Tweets.user_id = Follow.target inner join User on "
-					+ "Follow.target = User.user_id where Follow.user_id = " + user_id + " ORDER BY date_time desc;";
+					+ "Follow.target = User.user_id where Follow.user_id = "
+					+ user_id + " ORDER BY date_time desc;";
 			System.out.println("**** SQL for user = " + sql);
-			ArrayList a = timeline.selectTimeline(sql);
+			ArrayList a = twitterDAL.selectTimeline(sql);
 			// JtwigTemplate template =
 			// JtwigTemplate.classpathTemplate("templates/TwitterClone.jtwig");
 			//// JtwigModel model = JtwigModel.newModel();
