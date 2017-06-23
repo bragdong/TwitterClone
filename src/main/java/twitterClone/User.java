@@ -10,7 +10,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class User {
-	private int user_id; //changed this to private from public
+	private int user_id; 
 	private String username;
 	private String handle;
 	private String display_name;

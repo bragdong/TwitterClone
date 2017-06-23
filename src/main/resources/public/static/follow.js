@@ -2,37 +2,11 @@ console.log("in follow javacscript file");
 
 // AJAX posting x-www-form-urlencoded
 
-
-/* var p = document.createElement('p');
-var div = document.getElementById('msg'); */
-
-
-/* buttons.onclick = function () {
-var buttons = document.getElementsByTagName('button');
-var userid = document.getElementById('user_id');
-alert("user id = "+ userid);
-alert("get element by id ="+follow_button);
-buttons.addEventListener('click',function(evt) {
-    if (evt.target.getAttribute('userid' == "[object HTMLButtonElement]")) {
-    alert(evt.target.getAttribute("userid") + " click") ;} }) */
-    
+  
 var button = document.getElementById('follow_button');
-//var searchid = document.getElementById('search_id');
-//console.log("search id "+searchid);
-var targetid = document.getElementById('target_id');
-console.log("target id "+targetid);
-
-
-//	var search_id = searchid.value;
-/*	var target_id = targetid.value;
-	alert(this.id);
-	console.log("search value = "+search_id);
-	console.log("target value = "+target_id); */
-
-
+document.getElementById("myInput").focus();
 
 function mySort() {
-  console.log("mysort");
   var input, filter, table, ul, li, i;
   input = document.getElementById("myInput");
   filter = input.value.toUpperCase();

@@ -26,6 +26,7 @@
 // AJAX posting x-www-form-urlencoded
 var button = document.getElementById('submit_button');
 var tweet = document.getElementById('tweet');
+tweet.focus();
 
 var p = document.createElement('p');
 var div = document.getElementById('msg');
@@ -42,7 +43,8 @@ button.onclick = function () {
         	tweet.value = "";
     		p.innerHTML = "Your tweet has been posted!";
     		setTimeout(function() {
-    			p.innerHTML = "";}, 2000);
+    			p.innerHTML = "";
+    			tweet.focus();}, 2000);
         } else if (xhr.status !== 200) {
             alert('Request failed.  Returned status of ' + xhr.status);
         }
