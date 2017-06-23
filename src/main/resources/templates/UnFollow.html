@@ -13,15 +13,13 @@
 	      <label><b>Search</b></label>
 	      <input type="text" id="myInput" onkeyup="mySort()" placeholder="Search for users..">
 	    </div>   
-	    
+	    <br>
 	    <div id="users">
+	    <table id="myTable" style="width:50% table-layout: fixed">
 		{% for id in followlist %}
-		<div>
-		    <ul style="list-style: none;" id="myUL">
-		        <li>{{id}}</li>
-		    </ul>
-		</div>
+			{{id}}
 		{% endfor %} 
+		</table>
 		</div>
 	
 	<script src="/static/unfollow.js"></script>

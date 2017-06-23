@@ -205,29 +205,45 @@ public User checkLogin(String username, String password)
 	}
 
 	public void addLikes(int tweet_id, int user_id) { 
-		String updateNumLikes = "UPDATE Tweets SET numLikes = ((SELECT numLikes FROM Tweets WHERE tweet_id = ?) + 1)"
-				+ "WHERE tweet_id = ?";
+		String addNumLikes = "UPDATE Tweets SET numLikes = ((SELECT numLikes FROM Tweets WHERE tweet_id = ?) + 1)"
+				+ " WHERE tweet_id = ?";
 		String getNumLikes = "select count(*) from Likers where user_id = "
-				+ user_id + " and tweet_id =" + tweet_id;
+				+ user_id + " and tweet_id = " + tweet_id;
 		String insertLikers = "INSERT INTO Likers(tweet_id,user_id) VALUES (?,?);";
+		String subtractNumLikes = "UPDATE Tweets SET numLikes = ((SELECT numLikes FROM Tweets WHERE tweet_id = ?) - 1)"
+				+ " WHERE tweet_id = ?";
+		String removeLikers = "DELETE FROM Likers where tweet_id = ? and user_id = ?";
 
 		try (Connection conn = insertConnect();
-				PreparedStatement updatePstmt = conn.prepareStatement(updateNumLikes);
+				PreparedStatement updateAddPstmt = conn.prepareStatement(addNumLikes);
+				PreparedStatement updateSubtractPstmt = conn.prepareStatement(subtractNumLikes);
 
 				PreparedStatement insertPstmt = conn.prepareStatement(insertLikers);
+				PreparedStatement removePstmt = conn.prepareStatement(removeLikers);
 
 				Statement stmtOneLike = conn.createStatement();
-				ResultSet rs = stmtOneLike.executeQuery(getNumLikes);) {
+				ResultSet rs = stmtOneLike.executeQuery(getNumLikes); ) {
 
 			if (rs.getInt("count(*)") == 0) {
-				updatePstmt.setInt(1, tweet_id);
-				updatePstmt.setInt(2, tweet_id);
-				System.out.println(updatePstmt);
-				updatePstmt.executeUpdate();
+				System.out.println("count=0");
+				updateAddPstmt.setInt(1, tweet_id);
+				updateAddPstmt.setInt(2, tweet_id);
+				System.out.println(updateAddPstmt);
+				updateAddPstmt.executeUpdate();
 				
 				insertPstmt.setInt(1, tweet_id);
 				insertPstmt.setInt(2, user_id);
 				insertPstmt.executeUpdate(); 
+				
+			} else  {
+				System.out.println("count=1");
+				updateSubtractPstmt.setInt(1, tweet_id);
+				updateSubtractPstmt.setInt(2, tweet_id);
+				updateSubtractPstmt.executeUpdate();
+				
+				removePstmt.setInt(1, tweet_id);
+				removePstmt.setInt(2, user_id);
+				removePstmt.executeUpdate(); 
 			}
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
@@ -244,13 +260,6 @@ public User checkLogin(String username, String password)
 				Statement stmt = conn.createStatement();
 				ResultSet rs = stmt.executeQuery(sql)) {
 			int i = 0;
-//			while (rs.next()) { BEFORE
-//				followlist.add(i, rs.getString("display_name") + "&emsp;"
-//						+ rs.getString("handle") + "&emsp;" + "<button id=\""
-//						+ rs.getString("user_id")
-//						+ "\" type=\"button\" onclick=\"myFunction(this.id)\"> Follow</button>");
-//				i += 1;
-//			}
 			while (rs.next()) { //AFTER
 				followlist.add(i, "<tr><td style=\"width:40%\">"
 						+ rs.getString("display_name") + "</td><td style=\"width:40%\">"
@@ -276,10 +285,11 @@ public User checkLogin(String username, String password)
 				ResultSet rs = stmt.executeQuery(sql)) {
 			int i = 0;
 			while (rs.next()) {
-				followlist.add(i, rs.getString("display_name") + "&emsp;"
-						+ rs.getString("handle") + "&emsp;" + "<button id=\""
+				followlist.add(i, "<tr><td style=\"width:40%\">" 
+						+ rs.getString("display_name") + "</td><td style=\"width:40%\">"
+						+ rs.getString("handle") + "</td><td style=\"width:40%\"><button id=\""
 						+ rs.getString("user_id")
-						+ "\" type=\"button\" onclick=\"myFunction(this.id)\"> UnFollow</button>");
+						+ "\" type=\"button\" onclick=\"myFunction(this.id)\"> UnFollow</button></td>");
 				i += 1;
 			}
 		} catch (SQLException e) {

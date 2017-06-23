@@ -225,8 +225,7 @@ public class TwitterPage {
 				User user = req.session().attribute("user");
 
 				ArrayList a = twitterDAL.selectUnFollow(user);
-				JtwigTemplate template = JtwigTemplate
-						.classpathTemplate("templates/UnFollow.html");
+				JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/UnFollow.html");
 				JtwigModel model = JtwigModel.newModel().with("followlist", a);
 				model.with("link1", "<a href=\"/tweet/" + user.getUsername()
 						+ "\">Tweet</a>");

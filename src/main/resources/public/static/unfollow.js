@@ -7,18 +7,18 @@ var button = document.getElementById('follow_button');
 document.getElementById("myInput").focus();
 
 function mySort() {
-  var input, filter, table, ul, li, i;
+  var input, filter, table, tr, td, i;
   input = document.getElementById("myInput");
   filter = input.value.toUpperCase();
   table = document.getElementById("users");
-  ul = table.getElementsByTagName("ul");
-  for (i = 0; i < ul.length; i++) {
-    li = ul[i].getElementsByTagName("li")[0];
-    if (li) {
-      if (li.innerHTML.toUpperCase().indexOf(filter) > -1) {
-        ul[i].style.display = "";
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[0];
+    if (td) {
+      if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
       } else {
-        ul[i].style.display = "none";
+        tr[i].style.display = "none";
       }
     }       
   }
