@@ -13,7 +13,7 @@
 
   {% for id in timeline %}
   <div id="jtwig">
-    <ul style="list-style: none; background-color: lightgrey;">
+    <ul style="list-style: none; background-color: white;">
       <li>{{id}}</li>
     </ul>
   </div>
