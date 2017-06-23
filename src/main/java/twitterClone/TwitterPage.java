@@ -21,15 +21,16 @@ public class TwitterPage {
 		staticFileLocation("public/");
 		port(3000);
 
-		boolean debug = true;  // display entry and exits to various routes to standard output
+		boolean debug = true; // display entry and exits to various routes to
+								// standard output
 
 		Properties dbConnection = new Properties();
 		dbConnection.put("db", "jdbc:sqlite:TwitterClone.db");
 		final String dbConnection1 = dbConnection.getProperty("db");
 
-		Utilities util_services = new Utilities();		
+		Utilities util_services = new Utilities();
 		TwitterDAL twitterDAL = new TwitterDAL();
-		util_services.dbInitCheck(twitterDAL,args);
+		util_services.dbInitCheck(twitterDAL, args);
 
 		get("/register", (req, res) -> {
 			util_services.routeDisplays(debug, "in", "register");
@@ -99,8 +100,10 @@ public class TwitterPage {
 				model.with("link1", "<a href=\"/user/" + user.getUsername()
 						+ "\">Your Profile</a>");
 				model.with("link2", "<a href=\"/timeLine\">Timeline</a>");
-				model.with("link3", "<a href=\"/follow\">Follow</a>");
-				model.with("link4", "<a href=\"/login\">Log out</a>");
+				model.with("link3", "<a href=\"/tweet/" + user.getUsername()
+						+ "\">Tweet</a>");
+				model.with("link4", "<a href=\"/follow\">Follow</a>");
+				model.with("link5", "<a href=\"/login\">Log out</a>");
 				util_services.routeDisplays(debug, "out", "tweet");
 				return template.render(model);
 			}
@@ -116,7 +119,8 @@ public class TwitterPage {
 			return tweetMsg;
 		});
 
-		get("/timeLine", (req, res) -> {  //timeline based on users you're following
+		get("/timeLine", (req, res) -> { // timeline based on users you're
+											// following
 			util_services.routeDisplays(debug, "in", "timeLine");
 			String loggedin = req.session().attribute("loggedin");
 			if (loggedin == null) {
@@ -127,7 +131,7 @@ public class TwitterPage {
 			} else {
 				User user = req.session().attribute("user");
 
-				ArrayList a = twitterDAL.selectTimeline("follows",user,"");  
+				ArrayList a = twitterDAL.selectTimeline("follows", user, "");
 				System.out.println(a.size());
 				JtwigTemplate template = JtwigTemplate
 						.classpathTemplate("templates/TwitterClone.jtwig");
@@ -136,10 +140,11 @@ public class TwitterPage {
 				model.with("title", "Timeline");
 				model.with("link1", "<a href=\"/user/" + user.getUsername()
 						+ "\">Your Profile</a>");
-				model.with("link2", "<a href=\"/tweet/" + user.getUsername()
+				model.with("link2", "<a href=\"/timeLine\">Timeline</a>");
+				model.with("link3", "<a href=\"/tweet/" + user.getUsername()
 						+ "\">Tweet</a>");
-				model.with("link3", "<a href=\"/follow\">Follow</a>");
-				model.with("link4", "<a href=\"/login\">Log out</a>");
+				model.with("link4", "<a href=\"/follow\">Follow</a>");
+				model.with("link5", "<a href=\"/login\">Log out</a>");
 				util_services.routeDisplays(debug, "out", "timeLine");
 				return template.render(model);
 			}
@@ -159,18 +164,21 @@ public class TwitterPage {
 				String getUsername = req.params(":username");
 				String upperGetUsername = getUsername.substring(0, 1)
 						.toUpperCase() + getUsername.substring(1);
-				ArrayList a = twitterDAL.selectTimeline("self",user,getUsername); 
+				ArrayList a = twitterDAL.selectTimeline("self", user,
+						getUsername);
 				System.out.println(a.toString());
 				JtwigTemplate template = JtwigTemplate
 						.classpathTemplate("templates/TwitterClone.jtwig");
 				JtwigModel model = JtwigModel.newModel();
 				model.with("timeline", a);
 				model.with("title", upperGetUsername);
-				model.with("link1", "<a href=\"/tweet/" + user.getUsername()
-						+ "\">Tweet</a>");
+				model.with("link1", "<a href=\"/user/" + user.getUsername()
+						+ "\">Your Profile</a>");
 				model.with("link2", "<a href=\"/timeLine\">Timeline</a>");
-				model.with("link3", "<a href=\"/follow\">Follow</a>");
-				model.with("link4", "<a href=\"/login\">Log out</a>");
+				model.with("link3", "<a href=\"/tweet/" + user.getUsername()
+						+ "\">Tweet</a>");
+				model.with("link4", "<a href=\"/follow\">Follow</a>");
+				model.with("link5", "<a href=\"/login\">Log out</a>");
 				util_services.routeDisplays(debug, "out", "user");
 				return template.render(model);
 			}
@@ -192,12 +200,13 @@ public class TwitterPage {
 				JtwigTemplate template = JtwigTemplate
 						.classpathTemplate("templates/Follow.html");
 				JtwigModel model = JtwigModel.newModel().with("followlist", a);
-				model.with("link1", "<a href=\"/tweet/" + user.getUsername()
-						+ "\">Tweet</a>");
-				model.with("link2", "<a href=\"/timeLine\">Timeline</a>");
-				model.with("link3", "<a href=\"/user/" + user.getUsername()
+				model.with("link1", "<a href=\"/user/" + user.getUsername()
 						+ "\">Your Profile</a>");
-				model.with("link4", "<a href=\"/login\">Log out</a>");
+				model.with("link2", "<a href=\"/timeLine\">Timeline</a>");
+				model.with("link3", "<a href=\"/tweet/" + user.getUsername()
+						+ "\">Tweet</a>");
+				model.with("link4", "<a href=\"/follow\">Follow</a>");
+				model.with("link5", "<a href=\"/login\">Log out</a>");
 				util_services.routeDisplays(debug, "out", "follow");
 				return template.render(model);
 			}
@@ -259,24 +268,25 @@ public class TwitterPage {
 		});
 
 		// not being used at the moment (6/22)
-//		post("/refreshFeed", (req, rs) -> {
-//			req.session().attribute("user_id");
-//			int user_id = req.session().attribute("user_id");
-//			String sql = "select Tweets.numLikes, Tweets.tweet_id, Tweets.user_id, "
-//					+ "User.user_name, User.display_name, User.handle, "
-//					+ "tweet_msg, date_time FROM Tweets inner join Follow on "
-//					+ "Tweets.user_id = Follow.target inner join User on "
-//					+ "Follow.target = User.user_id where Follow.user_id = "
-//					+ user_id + " ORDER BY date_time desc;";
-//			System.out.println("**** SQL for user = " + sql);
-			//ArrayList a = twitterDAL.selectTimeline(sql);
-			// JtwigTemplate template =
-			// JtwigTemplate.classpathTemplate("templates/TwitterClone.jtwig");
-			//// JtwigModel model = JtwigModel.newModel();
-			// model.with("timeline", a); //displays bulleted list of tweets of
-			// those the user follows
-//			return a;
-//		});
+		// post("/refreshFeed", (req, rs) -> {
+		// req.session().attribute("user_id");
+		// int user_id = req.session().attribute("user_id");
+		// String sql = "select Tweets.numLikes, Tweets.tweet_id,
+		// Tweets.user_id, "
+		// + "User.user_name, User.display_name, User.handle, "
+		// + "tweet_msg, date_time FROM Tweets inner join Follow on "
+		// + "Tweets.user_id = Follow.target inner join User on "
+		// + "Follow.target = User.user_id where Follow.user_id = "
+		// + user_id + " ORDER BY date_time desc;";
+		// System.out.println("**** SQL for user = " + sql);
+		// ArrayList a = twitterDAL.selectTimeline(sql);
+		// JtwigTemplate template =
+		// JtwigTemplate.classpathTemplate("templates/TwitterClone.jtwig");
+		//// JtwigModel model = JtwigModel.newModel();
+		// model.with("timeline", a); //displays bulleted list of tweets of
+		// those the user follows
+		// return a;
+		// });
 
 	}
 
