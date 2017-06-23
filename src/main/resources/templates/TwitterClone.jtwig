@@ -23,24 +23,8 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script>    
-/*   setInterval(function() {
-	    var xhr = new XMLHttpRequest();
-	    xhr.open('POST', '/refreshFeed');
-	    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-	        xhr.onload = function() {
-	    	if (xhr.status === 200) {
-				console.log(xhr.responseText);
-				if (xhr.responseText == "") {
-	    			console.log("hi"); 
-	    		} 
-	        } else if (xhr.status !== 200) {
-	            alert('Request failed.  Returned status of ' + xhr.status);
-	        }
-	   	};
-	    xhr.send(); 
-	    
-   	}, 10000); */
-    
+
+setInterval('window.location.reload()', 10000);    
     
     var body;
     
