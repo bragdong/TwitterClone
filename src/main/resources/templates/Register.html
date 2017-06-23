@@ -73,8 +73,7 @@ button.onclick = function () {
     	if (password1 !== password2){
     		div.appendChild(p);
     		p.innerHTML = xhr.responseText;
-		}
-         else if (xhr.status === 200) {
+		} else if (xhr.status === 200) {
             div.appendChild(p);
     		p.innerHTML =  xhr.responseText;
     		if(xhr.responseText === "") {
