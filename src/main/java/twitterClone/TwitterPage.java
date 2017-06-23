@@ -204,6 +204,33 @@ public class TwitterPage {
 			return "";
 		});
 
+		get("/unfollow", (req, res) -> {
+			util_services.routeDisplays(debug, "in", "unfollow");
+			String loggedin = req.session().attribute("loggedin");
+			if (loggedin != "loggedin") {
+				System.out.println("not logged in");
+				String redirectUrl = "/login";
+				util_services.routeDisplays(debug, "out", "unfollow");
+				res.redirect(redirectUrl);
+			} else {
+				User user = req.session().attribute("user");
+
+				ArrayList a = twitterDAL.selectUnFollow(user);
+				JtwigTemplate template = JtwigTemplate
+						.classpathTemplate("templates/UnFollow.html");
+				JtwigModel model = JtwigModel.newModel().with("followlist", a);
+				model.with("link1", "<a href=\"/tweet/" + user.getUsername()
+						+ "\">Tweet</a>");
+				model.with("link2", "<a href=\"/timeLine\">Timeline</a>");
+				model.with("link3", "<a href=\"/user/" + user.getUsername()
+						+ "\">Your Profile</a>");
+				model.with("link4", "<a href=\"/login\">Log out</a>");
+				util_services.routeDisplays(debug, "out", "unfollow");
+				return template.render(model);
+			}
+			return "";
+		});		
+		
 		post("/follow_submit", (req, res) -> {
 			util_services.routeDisplays(debug, "in", "follow_submit");
 			User user = req.session().attribute("user");
@@ -213,7 +240,16 @@ public class TwitterPage {
 			util_services.routeDisplays(debug, "out", "follow_submit");
 			return "";
 		});
-
+		
+		post("/unfollow_submit", (req, res) -> {
+			util_services.routeDisplays(debug, "in", "unfollow_submit");
+			User user = req.session().attribute("user");
+			int target_id = Integer.parseInt(req.queryParams("target_id"));
+			System.out.println("target id from search = " + target_id);
+			twitterDAL.unFollow(user,target_id);
+			util_services.routeDisplays(debug, "out", "unfollow_submit");
+			return "";
+		});
 		post("/like", (req, res) -> {
 			int getTweetId = Integer.parseInt(req.queryParams("tweet_id"));
 			User user = req.session().attribute("user");

@@ -257,6 +257,29 @@ public User checkLogin(String username, String password)
 		return followlist;
 	}
 
+	public ArrayList<String> selectUnFollow(User user) {
+		String sql = "select handle,display_name,User.user_name,User.user_id from User "
+				+ "where User.user_id in (select target from Follow where Follow.user_id="
+				+ user.getUser_id() + " and Follow.target not in ( "+ user.getUser_id() +") );";
+		System.out.println("**** SQL for UnFollow = " + sql);
+		ArrayList<String> followlist = new ArrayList<String>();
+		try (Connection conn = insertConnect();
+				Statement stmt = conn.createStatement();
+				ResultSet rs = stmt.executeQuery(sql)) {
+			int i = 0;
+			while (rs.next()) {
+				followlist.add(i, rs.getString("display_name") + "&emsp;"
+						+ rs.getString("handle") + "&emsp;" + "<button id=\""
+						+ rs.getString("user_id")
+						+ "\" type=\"button\" onclick=\"myFunction(this.id)\"> UnFollow</button>");
+				i += 1;
+			}
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+		return followlist;
+	}	
+	
 	public void addFollow(int user_id, int target) {
 		String sql = "INSERT INTO Follow(user_id,target) VALUES (?,?)";
 		try (Connection conn = insertConnect();
@@ -269,6 +292,19 @@ public User checkLogin(String username, String password)
 		}
 	}
 
+	public void unFollow(User user, int target) {
+		String sql = "DELETE FROM Follow WHERE user_id = ? and target = ?";
+		System.out.println("delete sql = "+sql);
+		try (Connection conn = insertConnect();
+				PreparedStatement pstmt = conn.prepareStatement(sql)) {
+			pstmt.setInt(1, user.getUser_id());
+			pstmt.setInt(2, target);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+	}
+	
 	public String insertUser(User user, String password2) throws SQLException {
 		String sql = "INSERT INTO User(user_name,handle,display_name,password) VALUES (?,?,?,?)";
 		if (!user.getPassword1().equals(password2)) {

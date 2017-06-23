@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	</head>
+	<body>
+		
+		<h1>
+    		UnFollow
+  		</h1>
+  		<h4>{{link1}}&emsp;{{link2}}&emsp;{{link3}}&emsp;{{link4}}</h4>
+  		
+  		<div class="container">
+	      <label><b>Search</b></label>
+	      <input type="text" id="myInput" onkeyup="mySort()" placeholder="Search for users..">
+	    </div>   
+	    
+	    <div id="users">
+		{% for id in followlist %}
+		<div>
+		    <ul style="list-style: none;" id="myUL">
+		        <li>{{id}}</li>
+		    </ul>
+		</div>
+		{% endfor %} 
+		</div>
+	
+	<script src="/static/unfollow.js"></script>
+	</body>
+</html>
