@@ -103,7 +103,8 @@ public class TwitterPage {
 				model.with("link3", "<a href=\"/tweet/" + user.getUsername()
 						+ "\">Tweet</a>");
 				model.with("link4", "<a href=\"/follow\">Follow</a>");
-				model.with("link5", "<a href=\"/login\">Log out</a>");
+				model.with("link5", "<a href=\"/unfollow\">UnFollow</a>");
+				model.with("link6", "<a href=\"/login\">Log out</a>");
 				util_services.routeDisplays(debug, "out", "tweet");
 				return template.render(model);
 			}
@@ -144,7 +145,8 @@ public class TwitterPage {
 				model.with("link3", "<a href=\"/tweet/" + user.getUsername()
 						+ "\">Tweet</a>");
 				model.with("link4", "<a href=\"/follow\">Follow</a>");
-				model.with("link5", "<a href=\"/login\">Log out</a>");
+				model.with("link5", "<a href=\"/unfollow\">UnFollow</a>");
+				model.with("link6", "<a href=\"/login\">Log out</a>");
 				util_services.routeDisplays(debug, "out", "timeLine");
 				return template.render(model);
 			}
@@ -178,7 +180,8 @@ public class TwitterPage {
 				model.with("link3", "<a href=\"/tweet/" + user.getUsername()
 						+ "\">Tweet</a>");
 				model.with("link4", "<a href=\"/follow\">Follow</a>");
-				model.with("link5", "<a href=\"/login\">Log out</a>");
+				model.with("link5", "<a href=\"/unfollow\">UnFollow</a>");
+				model.with("link6", "<a href=\"/login\">Log out</a>");
 				util_services.routeDisplays(debug, "out", "user");
 				return template.render(model);
 			}
@@ -206,7 +209,9 @@ public class TwitterPage {
 				model.with("link3", "<a href=\"/tweet/" + user.getUsername()
 						+ "\">Tweet</a>");
 				model.with("link4", "<a href=\"/follow\">Follow</a>");
-				model.with("link5", "<a href=\"/login\">Log out</a>");
+				model.with("link5", "<a href=\"/unfollow\">UnFollow</a>");
+				model.with("link6", "<a href=\"/login\">Log out</a>");
+
 				util_services.routeDisplays(debug, "out", "follow");
 				return template.render(model);
 			}
@@ -227,18 +232,21 @@ public class TwitterPage {
 				ArrayList a = twitterDAL.selectUnFollow(user);
 				JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/UnFollow.html");
 				JtwigModel model = JtwigModel.newModel().with("followlist", a);
-				model.with("link1", "<a href=\"/tweet/" + user.getUsername()
-						+ "\">Tweet</a>");
-				model.with("link2", "<a href=\"/timeLine\">Timeline</a>");
-				model.with("link3", "<a href=\"/user/" + user.getUsername()
+
+				model.with("link1", "<a href=\"/user/" + user.getUsername()
 						+ "\">Your Profile</a>");
-				model.with("link4", "<a href=\"/login\">Log out</a>");
+				model.with("link2", "<a href=\"/timeLine\">Timeline</a>");
+				model.with("link3", "<a href=\"/tweet/" + user.getUsername()
+						+ "\">Tweet</a>");
+				model.with("link4", "<a href=\"/follow\">Follow</a>");
+				model.with("link5", "<a href=\"/unfollow\">UnFollow</a>");
+				model.with("link6", "<a href=\"/login\">Log out</a>");
 				util_services.routeDisplays(debug, "out", "unfollow");
 				return template.render(model);
 			}
 			return "";
-		});		
-		
+		});
+
 		post("/follow_submit", (req, res) -> {
 			util_services.routeDisplays(debug, "in", "follow_submit");
 			User user = req.session().attribute("user");
@@ -248,13 +256,13 @@ public class TwitterPage {
 			util_services.routeDisplays(debug, "out", "follow_submit");
 			return "";
 		});
-		
+
 		post("/unfollow_submit", (req, res) -> {
 			util_services.routeDisplays(debug, "in", "unfollow_submit");
 			User user = req.session().attribute("user");
 			int target_id = Integer.parseInt(req.queryParams("target_id"));
 			System.out.println("target id from search = " + target_id);
-			twitterDAL.unFollow(user,target_id);
+			twitterDAL.unFollow(user, target_id);
 			util_services.routeDisplays(debug, "out", "unfollow_submit");
 			return "";
 		});
