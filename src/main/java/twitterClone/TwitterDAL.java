@@ -106,31 +106,22 @@ public class TwitterDAL {
 public User checkLogin(String username, String password)
 		throws SQLException {
 	String hashedPassword = hashPassword(password);
-	String sqlUsername = "SELECT count(*) FROM User where user_name = \""   //Do we need this query?
-			+ username + "\" COLLATE NOCASE";
 	String sqlUsernamePassword = "SELECT count(*) FROM User where user_name = \""
 			+ username + "\" AND password = \"" + hashedPassword + "\"";
 
-		String returnMessage = "";
 		User user; 
 
 		try (Connection conn = insertConnect();
-				Statement stmt = conn.createStatement();
-				ResultSet rs = stmt.executeQuery(sqlUsername);
 				Statement stmt1 = conn.createStatement();
 				ResultSet rs1 = stmt1.executeQuery(sqlUsernamePassword)) {
 
-			int getUserCount = rs.getInt("count(*)");
 			int getUserPasswordCount = rs1.getInt("count(*)");
 
-			if (getUserCount == 0) {
-				return null;
-			} else if (getUserPasswordCount == 0) {
+			if (getUserPasswordCount == 0) {
 				return null;
 			} else {
 				user = new User("", "", "", "");
 			}
-
 		}
 
 		return user;
@@ -152,7 +143,7 @@ public User checkLogin(String username, String password)
 		return (String) hashedPassword;
 	}
 
-	public ArrayList selectTimeline(String timeLineQueryParm, User user, String getUsername) {
+	public ArrayList<String> selectTimeline(String timeLineQueryParm, User user, String getUsername) {
 		ArrayList<String> tweetList = new ArrayList<String>();
 		String sql = "";
 		if (timeLineQueryParm.equals("follows")){
@@ -243,7 +234,7 @@ public User checkLogin(String username, String password)
 		}
 	}
 
-	public ArrayList selectFollow(User user) {
+	public ArrayList<String> selectFollow(User user) {
 		String sql = "select handle,display_name,User.user_name,User.user_id from User "
 				+ "where User.user_id not in (select target from Follow where Follow.user_id="
 				+ user.getUser_id() + ");";

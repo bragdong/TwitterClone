@@ -12,23 +12,23 @@
   <table>
     <tr>
       <td align="right"><b>Username:</b></td>
-      <td align="left"><input type="text"  id="username" /></td>
+      <td align="left"><input type="text" maxlength="15" id="username" /></td>
     </tr>
     <tr>
       <td align="right"><b>Handle @</b></td>
-      <td align="left"><input type="text"  id="handle" /></td>
+      <td align="left"><input type="text" maxlength="15" id="handle" /></td>
     </tr>
     <tr>
       <td align="right"><b>Displayname</b></td>
-      <td align="left"><input type="text"  id="displayName" /></td>
+      <td align="left"><input type="text" maxlength="15" id="displayName" /></td>
     </tr>
      <tr>
       <td align="right"><b>Password:</b></td>
-      <td align="left"><input type="password"  id="psw1" /></td>
+      <td align="left"><input type="password" maxlength="15" id="psw1" /></td>
     </tr>
      <tr>
       <td align="right"><b>Password (repeat)</b></td>
-      <td align="left"><input type="password"  id="psw2" /></td>
+      <td align="left"><input type="password" maxlength="15" id="psw2" /></td>
     </tr>           
   </table>
 
@@ -59,12 +59,22 @@ var div = document.getElementById('msg');
 
 button.onclick = function () {
 	var username = usernameID.value;
+	var handleBeforeAdd = handleID.value;
 	var handle = ('@' + handleID.value);
 	var displayname = displaynameID.value;
 	var password1 = password1ID.value;
 	var password2 = password2ID.value;
 	
 	var usernameLower = username.toLowerCase();
+	
+	function usernameHandleCheck(){
+	var alphaNumExp = /^[a-zA-Z0-9]+$/;
+	if(username.match(alphaNumExp) && handleBeforeAdd.match(alphaNumExp)){
+	return true;
+	}else{
+	return false;
+	}
+	}
 	
     var xhr = new XMLHttpRequest();
     xhr.open('POST', '/register_submit');
@@ -86,7 +96,13 @@ button.onclick = function () {
     +'&displayname=' + encodeURIComponent(displayname) + '&password1=' + encodeURIComponent(password1)
     +'&password2=' + encodeURIComponent(password2);
     console.log(body);
-    xhr.send(body);
+    
+    if(usernameHandleCheck() === false) {
+    div.appendChild(p);
+    p.innerHTML = "Please ensure there are no special characters or spaces in your username or handle."
+    } else {
+        xhr.send(body);
+        }
 };
 </script>
 </body>
