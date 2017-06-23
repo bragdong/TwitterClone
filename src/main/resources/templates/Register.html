@@ -69,7 +69,7 @@ button.onclick = function () {
 	var usernameLower = username.toLowerCase();
 	
 	function usernameHandleCheck(){
-	var alphaNumExp = /^[a-zA-Z0-9]+$/;
+	var alphaNumExp = /^[a-zA-Z0-9_]+$/;
 	if(username.match(alphaNumExp) && handleBeforeAdd.match(alphaNumExp)){
 	return true;
 	}else{
@@ -100,7 +100,7 @@ button.onclick = function () {
     
     if(usernameHandleCheck() === false) {
     div.appendChild(p);
-    p.innerHTML = "Please ensure there are no special characters or spaces in your username or handle."
+    p.innerHTML = "Please ensure there are no special characters (besides '_') or spaces in your username or handle."
     } else {
         xhr.send(body);
         }
