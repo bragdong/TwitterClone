@@ -7,21 +7,19 @@
 		<h1>
     		Follow
   		</h1>
-  		<h4>{{link1}}&emsp;{{link2}}&emsp;{{link3}}&emsp;{{link4}}</h4>
+  		<h4>{{link1}}&emsp;{{link2}}&emsp;{{link3}}&emsp;{{link4}}&emsp;{{link5}}</h4>
   		
   		<div class="container">
 	      <label><b>Search</b></label>
 	      <input type="text" id="myInput" onkeyup="mySort()" placeholder="Search for users..">
 	    </div>   
-	    
+	    <br>
 	    <div id="users">
+	    <table id="myTable" style="width:100% table-layout: fixed">
 		{% for id in followlist %}
-		<div>
-		    <ul style="list-style: none;" id="myUL">
-		        <li>{{id}}</li>
-		    </ul>
-		</div>
-		{% endfor %} 
+			{{id}}
+		{% endfor %}
+		</table> 
 		</div>
 	
 	<script src="/static/follow.js"></script>

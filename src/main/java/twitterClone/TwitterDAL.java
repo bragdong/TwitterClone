@@ -244,11 +244,19 @@ public User checkLogin(String username, String password)
 				Statement stmt = conn.createStatement();
 				ResultSet rs = stmt.executeQuery(sql)) {
 			int i = 0;
-			while (rs.next()) {
-				followlist.add(i, rs.getString("display_name") + "&emsp;"
-						+ rs.getString("handle") + "&emsp;" + "<button id=\""
+//			while (rs.next()) { BEFORE
+//				followlist.add(i, rs.getString("display_name") + "&emsp;"
+//						+ rs.getString("handle") + "&emsp;" + "<button id=\""
+//						+ rs.getString("user_id")
+//						+ "\" type=\"button\" onclick=\"myFunction(this.id)\"> Follow</button>");
+//				i += 1;
+//			}
+			while (rs.next()) { //AFTER
+				followlist.add(i, "<tr><td style=\"width:40%\">"
+						+ rs.getString("display_name") + "</td><td style=\"width:40%\">"
+						+ rs.getString("handle") + "</td><td style=\"width:40%\">" + "<button id=\""
 						+ rs.getString("user_id")
-						+ "\" type=\"button\" onclick=\"myFunction(this.id)\"> Follow</button>");
+						+ "\" type=\"button\" onclick=\"myFunction(this.id)\"> Follow</button></td>");
 				i += 1;
 			}
 		} catch (SQLException e) {
