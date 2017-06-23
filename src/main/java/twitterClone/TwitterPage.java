@@ -21,23 +21,15 @@ public class TwitterPage {
 		staticFileLocation("public/");
 		port(3000);
 
-		boolean debug = true;
+		boolean debug = true;  // display entry and exits to various routes to standard output
 
 		Properties dbConnection = new Properties();
 		dbConnection.put("db", "jdbc:sqlite:TwitterClone.db");
 		final String dbConnection1 = dbConnection.getProperty("db");
 
-		Utilities util_services = new Utilities();
+		Utilities util_services = new Utilities();		
 		TwitterDAL twitterDAL = new TwitterDAL();
-
-		if (args.length > 0) {
-			String dbInitParm = args[0];
-			if (args[0] == dbInitParm) {
-				System.out.println("Initializing Twitter Database...");
-				twitterDAL.deleteDB();
-				twitterDAL.createDB();
-			}
-		}
+		util_services.dbInitCheck(twitterDAL,args);
 
 		get("/register", (req, res) -> {
 			util_services.routeDisplays(debug, "in", "register");
@@ -124,7 +116,7 @@ public class TwitterPage {
 			return tweetMsg;
 		});
 
-		get("/timeLine", (req, res) -> {
+		get("/timeLine", (req, res) -> {  //timeline based on users you're following
 			util_services.routeDisplays(debug, "in", "timeLine");
 			String loggedin = req.session().attribute("loggedin");
 			if (loggedin == null) {
@@ -134,15 +126,8 @@ public class TwitterPage {
 				res.redirect(redirectUrl);
 			} else {
 				User user = req.session().attribute("user");
-				String sql = "select Tweets.numLikes, Tweets.tweet_id, Tweets.user_id, "
-						+ "User.user_name, User.display_name, User.handle, "
-						+ "tweet_msg, date_time FROM Tweets inner join Follow on "
-						+ "Tweets.user_id = Follow.target inner join User on "
-						+ "Follow.target = User.user_id where Follow.user_id = "
-						+ user.getUser_id()
-						+ " ORDER BY date_time desc LIMIT 10;";
-				System.out.println("**** SQL for user = " + sql);
-				ArrayList a = twitterDAL.selectTimeline(sql);
+
+				ArrayList a = twitterDAL.selectTimeline("follows",user,"");  
 				System.out.println(a.size());
 				JtwigTemplate template = JtwigTemplate
 						.classpathTemplate("templates/TwitterClone.jtwig");
@@ -171,14 +156,10 @@ public class TwitterPage {
 				res.redirect(redirectUrl);
 			} else {
 				User user = req.session().attribute("user");
-				String upperGetUsername = user.getUsername().substring(0, 1)
-						.toUpperCase() + user.getUsername().substring(1); // Uppercase
-				String sql = "select Tweets.numLikes, Tweets.tweet_id, Tweets.user_id, User.user_name, User.display_name, User.handle, "
-						+ "tweet_msg, date_time FROM Tweets inner join User on Tweets.user_id = User.user_id  "
-						+ "WHERE User.user_name = \"" + user.getUsername()
-						+ "\" ORDER BY date_time desc LIMIT 10;";
-				System.out.println("**** SQL for user = " + sql);
-				ArrayList a = twitterDAL.selectTimeline(sql);
+				String getUsername = req.params(":username");
+				String upperGetUsername = getUsername.substring(0, 1)
+						.toUpperCase() + getUsername.substring(1);
+				ArrayList a = twitterDAL.selectTimeline("self",user,getUsername); 
 				System.out.println(a.toString());
 				JtwigTemplate template = JtwigTemplate
 						.classpathTemplate("templates/TwitterClone.jtwig");
@@ -206,11 +187,8 @@ public class TwitterPage {
 				res.redirect(redirectUrl);
 			} else {
 				User user = req.session().attribute("user");
-				String sql = "select handle,display_name,User.user_name,User.user_id from User "
-						+ "where User.user_id not in (select target from Follow where Follow.user_id="
-						+ user.getUser_id() + ");";
-				System.out.println("**** SQL for Follow = " + sql);
-				ArrayList a = twitterDAL.selectFollow(sql);
+
+				ArrayList a = twitterDAL.selectFollow(user);
 				JtwigTemplate template = JtwigTemplate
 						.classpathTemplate("templates/Follow.html");
 				JtwigModel model = JtwigModel.newModel().with("followlist", a);
@@ -245,24 +223,24 @@ public class TwitterPage {
 		});
 
 		// not being used at the moment (6/22)
-		post("/refreshFeed", (req, rs) -> {
-			req.session().attribute("user_id");
-			int user_id = req.session().attribute("user_id");
-			String sql = "select Tweets.numLikes, Tweets.tweet_id, Tweets.user_id, "
-					+ "User.user_name, User.display_name, User.handle, "
-					+ "tweet_msg, date_time FROM Tweets inner join Follow on "
-					+ "Tweets.user_id = Follow.target inner join User on "
-					+ "Follow.target = User.user_id where Follow.user_id = "
-					+ user_id + " ORDER BY date_time desc;";
-			System.out.println("**** SQL for user = " + sql);
-			ArrayList a = twitterDAL.selectTimeline(sql);
+//		post("/refreshFeed", (req, rs) -> {
+//			req.session().attribute("user_id");
+//			int user_id = req.session().attribute("user_id");
+//			String sql = "select Tweets.numLikes, Tweets.tweet_id, Tweets.user_id, "
+//					+ "User.user_name, User.display_name, User.handle, "
+//					+ "tweet_msg, date_time FROM Tweets inner join Follow on "
+//					+ "Tweets.user_id = Follow.target inner join User on "
+//					+ "Follow.target = User.user_id where Follow.user_id = "
+//					+ user_id + " ORDER BY date_time desc;";
+//			System.out.println("**** SQL for user = " + sql);
+			//ArrayList a = twitterDAL.selectTimeline(sql);
 			// JtwigTemplate template =
 			// JtwigTemplate.classpathTemplate("templates/TwitterClone.jtwig");
 			//// JtwigModel model = JtwigModel.newModel();
 			// model.with("timeline", a); //displays bulleted list of tweets of
 			// those the user follows
-			return a;
-		});
+//			return a;
+//		});
 
 	}
 

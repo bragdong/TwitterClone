@@ -106,13 +106,13 @@ public class TwitterDAL {
 public User checkLogin(String username, String password)
 		throws SQLException {
 	String hashedPassword = hashPassword(password);
-	String sqlUsername = "SELECT count(*) FROM User where user_name = \""
+	String sqlUsername = "SELECT count(*) FROM User where user_name = \""   //Do we need this query?
 			+ username + "\" COLLATE NOCASE";
 	String sqlUsernamePassword = "SELECT count(*) FROM User where user_name = \""
 			+ username + "\" AND password = \"" + hashedPassword + "\"";
 
 		String returnMessage = "";
-		User user;
+		User user; 
 
 		try (Connection conn = insertConnect();
 				Statement stmt = conn.createStatement();
@@ -152,8 +152,27 @@ public User checkLogin(String username, String password)
 		return (String) hashedPassword;
 	}
 
-	public ArrayList selectTimeline(String sql) {
+	public ArrayList selectTimeline(String timeLineQueryParm, User user, String getUsername) {
 		ArrayList<String> tweetList = new ArrayList<String>();
+		String sql = "";
+		if (timeLineQueryParm.equals("follows")){
+			 sql = "select Tweets.numLikes, Tweets.tweet_id, Tweets.user_id, "
+					+ "User.user_name, User.display_name, User.handle, "
+					+ "tweet_msg, date_time FROM Tweets inner join Follow on "
+					+ "Tweets.user_id = Follow.target inner join User on "
+					+ "Follow.target = User.user_id where Follow.user_id = "
+					+ user.getUser_id()
+					+ " ORDER BY date_time desc LIMIT 20;";
+			System.out.println("**** SQL for select follow timeline = " + sql);
+		} else if (timeLineQueryParm.equals("self")){
+			 sql = "select Tweets.numLikes, Tweets.tweet_id, Tweets.user_id, User.user_name, User.display_name, User.handle, "
+					+ "tweet_msg, date_time FROM Tweets inner join User on Tweets.user_id = User.user_id  "
+					+ "WHERE User.user_name = \"" + getUsername
+					+ "\" ORDER BY date_time desc LIMIT 20;";
+			System.out.println("**** SQL for select self timeline  = " + sql);
+		} else {
+			System.out.println("Error in passing parm into selectTimeline method.");
+		}
 		try (Connection conn = insertConnect();
 				Statement stmt = conn.createStatement();
 				ResultSet rs = stmt.executeQuery(sql)) {
@@ -231,7 +250,11 @@ public User checkLogin(String username, String password)
 		}
 	}
 
-	public ArrayList selectFollow(String sql) {
+	public ArrayList selectFollow(User user) {
+		String sql = "select handle,display_name,User.user_name,User.user_id from User "
+				+ "where User.user_id not in (select target from Follow where Follow.user_id="
+				+ user.getUser_id() + ");";
+		System.out.println("**** SQL for Follow = " + sql);
 		ArrayList<String> followlist = new ArrayList<String>();
 		try (Connection conn = insertConnect();
 				Statement stmt = conn.createStatement();
